@@ -146,19 +146,6 @@ $visitor = mysqli_num_rows($v);
       <div class="overview-boxes">
         <div class="box">
           <div class="right-side">
-            <div class="box-topic">Total Users</div>
-            <div class="number"><?php echo $member + $admin + $watchman; ?></div>
-            <div class="indicator">
-              <i class='bx bx-up-arrow-alt'></i>
-              <span class="text">Till Now</span>
-
-            </div>
-          </div>
-          <i class='bx bx-user-circle bx-lg user'></i>
-        </div>
-
-        <div class="box">
-          <div class="right-side">
             <div class="box-topic">Total Society</div>
             <div class="number"><?php echo $admin; ?></div>
             <div class="indicator">
@@ -177,6 +164,18 @@ $visitor = mysqli_num_rows($v);
             <div class="indicator">
               <i class='bx bx-up-arrow-alt'></i>
               <span class="text">Till Now</span>
+            </div>
+          </div>
+          <i class='bx bx-history bx-lg history'></i>
+        </div>
+
+        <div class="box">
+          <div class="right-side">
+            <!-- <div class="box-topic">New Feature</div> -->
+            <div class="box-topic">Real-time Notifications</div>
+            <div class="indicator">
+              <i class='bx bx-bell down'></i>
+              <span class="text">Stay Updated Instantly</span>
             </div>
           </div>
           <i class='bx bx-history bx-lg history'></i>
