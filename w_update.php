@@ -123,7 +123,7 @@ if (isset($_POST['update'])) {
                 echo '<script>
                       alert("Update Successfull");
                       // Load a new URL in the current window
-                      window.location.assign("http://localhost/Eagle_Eye/a_dashboardE.php");
+                      window.location.assign(" a_dashboardE.php");
                   </script>';
             }
             if (isset($error_msg)) {

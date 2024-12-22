@@ -40,6 +40,8 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
 <body>
   <div class="sidebar">
     <div class="logo-details">
+      <img src="./img/logo.png" alt="Eagle Eye Logo" style="width: 50px; height: auto;" />
+
       &emsp;&emsp;&emsp;
       <span class="logo_name">Eagle Eye</span>
     </div>
@@ -50,12 +52,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
           <span class="links_name">HOME</span>
         </a>
       </li>
-      <li>
-        <a href="m_historyE.php">
-          <i class='bx bx-box'></i>
-          <span class="links_name">HISTORY</span>
-        </a>
-      </li>
+
       <li>
         <a href="m_requestE.php">
           <i class='bx bx-list-ul'></i>
@@ -75,6 +72,12 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
         <a href="" class="active">
           <i class='bx bx-box'></i>
           <span class="links_name">REPORT</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_historyE.php">
+          <i class='bx bx-box'></i>
+          <span class="links_name">HISTORY</span>
         </a>
       </li>
 

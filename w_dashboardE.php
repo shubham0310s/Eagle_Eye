@@ -42,6 +42,8 @@ $visitor = mysqli_num_rows($v);
 <body>
   <div class="sidebar">
     <div class="logo-details">
+      <img src="./img/logo.png" alt="Eagle Eye Logo" style="width: 50px; height: auto;" />
+
       &emsp; &emsp; &emsp; <span class="logo_name">Eagle Eye </span>
     </div>
     <ul class="nav-links">

@@ -64,6 +64,8 @@ if (mysqli_num_rows($result) == 0) {
 <body>
   <div class="sidebar">
     <div class="logo-details">
+      <img src="./img/logo.png" alt="Eagle Eye Logo" style="width: 50px; height: auto;" />
+
       &emsp;&emsp;&emsp;
       <span class="logo_name">Eagle Eye</span>
     </div>
@@ -74,12 +76,7 @@ if (mysqli_num_rows($result) == 0) {
           <span class="links_name">HOME</span>
         </a>
       </li>
-      <li>
-        <a href="m_historyE.php">
-          <i class='bx bx-box'></i>
-          <span class="links_name">HISTORY</span>
-        </a>
-      </li>
+
       <li>
         <a href="" class="active">
           <i class='bx bx-list-ul'></i>
@@ -100,6 +97,12 @@ if (mysqli_num_rows($result) == 0) {
         <a href="m_report.php">
           <i class='bx bx-box'></i>
           <span class="links_name">REPORT</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_historyE.php">
+          <i class='bx bx-box'></i>
+          <span class="links_name">HISTORY</span>
         </a>
       </li>
 

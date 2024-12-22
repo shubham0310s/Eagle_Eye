@@ -43,7 +43,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
           <span class="links_name">HOME</span>
         </a>
       </li>
-
+      <li>
+        <a href="a_bill.php">
+          <i class='bx bx-receipt'></i>
+          <span class="links_name">Bill</span>
+        </a>
+      </li>
       <li>
         <a href="a_historyE.php">
           <i class='bx bx-list-ul'></i>

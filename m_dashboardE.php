@@ -47,6 +47,8 @@ $visitor = mysqli_num_rows($v);
 <body>
   <div class="sidebar">
     <div class="logo-details">
+      <img src="./img/logo.png" alt="Eagle Eye Logo" style="width: 50px; height: auto;" />
+
       &emsp;&emsp;&emsp;
       <span class="logo_name">Eagle Eye</span>
     </div>
@@ -57,12 +59,7 @@ $visitor = mysqli_num_rows($v);
           <span class="links_name">HOME</span>
         </a>
       </li>
-      <li>
-        <a href="m_historyE.php">
-          <i class='bx bx-box'></i>
-          <span class="links_name">HISTORY</span>
-        </a>
-      </li>
+
       <li>
         <a href="m_requestE.php">
           <i class='bx bx-list-ul'></i>
@@ -82,6 +79,12 @@ $visitor = mysqli_num_rows($v);
         <a href="m_report.php">
           <i class='bx bx-box'></i>
           <span class="links_name">REPORT</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_historyE.php">
+          <i class='bx bx-box'></i>
+          <span class="links_name">HISTORY</span>
         </a>
       </li>
 
@@ -171,14 +174,13 @@ $visitor = mysqli_num_rows($v);
 
         <div class="box">
           <div class="right-side">
-            <!-- <div class="box-topic">New Feature</div> -->
-            <div class="box-topic">Real-time Notifications</div>
+            <div class="box-topic">Chat </div>
+            <div class="number"> Interaction</div>
             <div class="indicator">
               <i class='bx bx-bell down'></i>
               <span class="text">Stay Updated Instantly</span>
             </div>
           </div>
-          <i class='bx bx-history bx-lg history'></i>
         </div>
 
 
