@@ -1,0 +1,157 @@
+* {
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+body {
+	height: 100vh;
+	background: rgb(151,165,238);
+	background: linear-gradient(135deg, rgba(151,165,238,1) 19%, rgba(64,0,195,1) 100%); 
+	background-attachment: fixed;
+}
+.register {
+	width: 400px;
+	background-color: #ffffff;
+	box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+	margin: 100px auto;
+}
+label{
+	background: rgb(0,61,195);
+	background: linear-gradient(306deg, rgba(0,61,195,1) 56%, rgba(0,161,255,1) 100%); 
+}
+.register h1 {
+	text-align: center;
+	color: #1423ba;
+	font-size: 24px;
+	padding: 20px 0 20px 0;
+	border-bottom: 1px solid #dee0e4;
+}
+.register form {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding-top: 20px;
+}
+.register form label {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+   height: 50px;
+	background-color: #3274d6;
+	color: #ffffff;
+}
+.register form input[type="password"], .register form input[type="text"], .register form input[type="email"],.register form input[type="number"] {
+	width: 310px;
+	height: 50px;
+	border: 1px solid #dee0e4;
+	margin-bottom: 20px;
+	padding: 0 15px;
+}
+.register form input[type="submit"] {
+	width: 100%;
+	padding: 15px;
+	margin-top: 20px;
+	background: rgb(64,0,195);
+	 background: linear-gradient(306deg, rgba(64,0,195,1) 28%, rgba(43,71,218,1) 71%); 
+   border: 0;
+	cursor: pointer;
+	font-weight: bold;
+	color: #ffffff;
+	transition-duration: 3s;
+}
+.register form input[type="submit"]:hover {
+	background: rgb(73,83,179);
+	background: linear-gradient(306deg, rgba(73,83,179,1) 0%, rgba(0,161,255,1) 100%); 
+	transition-duration: 3s;
+}
+select {
+	width: 310px;
+	height: 50px;
+	margin-bottom: 20px;
+	padding: 0 15px;
+	border: 1px solid #dee0e4;
+	/* needed */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	/* SVG background image */
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Ctitle%3Edown-arrow%3C%2Ftitle%3E%3Cg%20fill%3D%22%23000000%22%3E%3Cpath%20d%3D%22M10.293%2C3.293%2C6%2C7.586%2C1.707%2C3.293A1%2C1%2C0%2C0%2C0%2C.293%2C4.707l5%2C5a1%2C1%2C0%2C0%2C0%2C1.414%2C0l5-5a1%2C1%2C0%2C1%2C0-1.414-1.414Z%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+	  background-size: .6em;
+	  background-position: calc(100% - 1.3em) center;
+	  background-repeat: no-repeat;
+  }
+  select::-ms-expand {
+	  display: none;
+  }
+  .file-upload-wrapper{
+	position:relative;
+	width:77%;
+	height:50px;
+	border: 1px solid #dee0e4;
+	cursor: pointer;
+  }
+  .file-upload-wrapper::after{
+	content:attr(data-text);
+	font-size: 15px;
+	font-weight: bold;
+	position:absolute;
+	top:0;
+	left:0;
+	background:rgb(245, 242, 242);
+	padding:5px 15px;
+	display: block;
+	width:calc(100% - 40px);
+	pointer-events:none;
+	z-index: 20;
+	height:4px;
+	line-height: 40px;
+	color:#999;
+	font-weight: 300;
+  }
+  .file-upload-wrapper::before{
+	content:"Upload";
+	position:absolute;
+	top:0;
+	right:0;
+	display: inline-block;
+	height:48px;
+	background: #3274d6 ;
+	color:#fff;
+	font-weight: 600;
+	z-index: 25;
+	border: 1px solid #dee0e4;
+	font-size: 16px;
+	line-height: 47px;
+	padding:0 14px;
+	text-transform: uppercase;
+	pointer-events: none;
+	transition: 0.5s ease-in-out;
+  }
+  .file-upload-wrapper:hover::before{
+	background: #09316c ;
+  }
+  .file-upload-wrapper input{
+	opacity: 0;
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index: 99;
+	height:50px;
+	margin:0;
+	padding:0;
+	display:block;
+	cursor: pointer;
+	width:100%;
+  }
+  input[type=number] {
+	appearance: textfield;
+  }
+  
+	
+  
+  
