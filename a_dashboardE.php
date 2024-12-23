@@ -8,7 +8,7 @@ if (!isset($_SESSION['a_logged_in'])) {
 if (isset($_SESSION["a_society"])) {
   $society = $_SESSION["a_society"];
   $mresult = mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'");
-  $wresult = mysqli_query($conn, "SELECT * FROM `watchman_tabe` WHERE `society_reg`='{$society}'");
+  $wresult = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}'");
   $find = $society . "_";
 
 }
@@ -163,6 +163,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
 
           </a>
         </div>
+        <div class="overview-boxes"></div>
         <div class="box">
           <a href="w_registerE.php">
             <div class="right-side">
@@ -176,6 +177,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
             <!-- <i class='bx bx-cart-alt cart'></i> -->
           </a>
         </div>
+
         <div class="box">
           <div class="right-side">
             <div class="box-topic">Total Member</div>
@@ -210,71 +212,73 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
           <i class='bx bx-user-circle bx-lg user'></i>
         </div>
       </div>
-      <!-- Event Calendar Section -->
-      <div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-        <h2 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Event Calendar</h2>
-        <div id="calendar"
-          style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-family: Arial, sans-serif;">
-          <!-- Calendar days will be dynamically added here -->
-        </div>
+    </div>
+
+    <!-- Event Calendar Section -->
+    <div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+      <h2 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Event Calendar</h2>
+      <div id="calendar"
+        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-family: Arial, sans-serif;">
+        <!-- Calendar days will be dynamically added here -->
       </div>
-      <!DOCTYPE html>
+    </div>
+    <!DOCTYPE html>
 
 
 
 
-      <script>
-        function generateCalendar() {
-          const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-          const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
-          const calendar = document.getElementById('calendar');
-          const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    <script>
+      function generateCalendar() {
+        const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+        const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
+        const calendar = document.getElementById('calendar');
+        const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-          // Add week day headers
-          weekDays.forEach(day => {
-            const dayElement = document.createElement('div');
-            dayElement.textContent = day;
-            dayElement.style.fontWeight = 'bold';
-            dayElement.style.textAlign = 'center';
-            dayElement.style.borderBottom = '1px solid #ccc';
-            calendar.appendChild(dayElement);
-          });
+        // Add week day headers
+        weekDays.forEach(day => {
+          const dayElement = document.createElement('div');
+          dayElement.textContent = day;
+          dayElement.style.fontWeight = 'bold';
+          dayElement.style.textAlign = 'center';
+          dayElement.style.borderBottom = '1px solid #ccc';
+          calendar.appendChild(dayElement);
+        });
 
-          // Add blank spaces for days before the first day
-          for (let i = 0; i < firstDayIndex; i++) {
-            const blankSpace = document.createElement('div');
-            calendar.appendChild(blankSpace);
-          }
-
-          // Add days of the current month
-          for (let i = 1; i <= daysInMonth; i++) {
-            const dayCell = document.createElement('div');
-            dayCell.textContent = i;
-            dayCell.style.padding = '10px';
-            dayCell.style.textAlign = 'center';
-            dayCell.style.border = '1px solid #ccc';
-            dayCell.style.cursor = 'pointer';
-            dayCell.onclick = () => alert(`Clicked on day ${i}`);
-            calendar.appendChild(dayCell);
-          }
+        // Add blank spaces for days before the first day
+        for (let i = 0; i < firstDayIndex; i++) {
+          const blankSpace = document.createElement('div');
+          calendar.appendChild(blankSpace);
         }
 
-        // Generate the calendar on page load
-        generateCalendar();
-      </script>
-
-
-      <script>
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-          sidebar.classList.toggle("active");
-          if (sidebar.classList.contains("active")) {
-            sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-          } else
-            sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+        // Add days of the current month
+        for (let i = 1; i <= daysInMonth; i++) {
+          const dayCell = document.createElement('div');
+          dayCell.textContent = i;
+          dayCell.style.padding = '10px';
+          dayCell.style.textAlign = 'center';
+          dayCell.style.border = '1px solid #ccc';
+          dayCell.style.cursor = 'pointer';
+          dayCell.onclick = () => alert(`Clicked on day ${i}`);
+          calendar.appendChild(dayCell);
         }
-      </script>
+      }
+
+      // Generate the calendar on page load
+      generateCalendar();
+    </script>
+
+
+    <script>
+      let sidebar = document.querySelector(".sidebar");
+      let sidebarBtn = document.querySelector(".sidebarBtn");
+      sidebarBtn.onclick = function () {
+        sidebar.classList.toggle("active");
+        if (sidebar.classList.contains("active")) {
+          sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+        } else
+          sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+      }
+    </script>
 
 </body>
 </section>

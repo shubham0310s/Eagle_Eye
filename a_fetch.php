@@ -16,7 +16,7 @@ $output = '';
 if (isset($_POST["query"])) {
 	$search = mysqli_real_escape_string($conn, $_POST["query"]);
 	$query = "
-	SELECT * FROM `watchman_tabe` WHERE `society_reg`='{$society}' AND `w_name` LIKE '%" . $search . "%' 
+	SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}' AND `w_name` LIKE '%" . $search . "%' 
 	OR `society_reg`='{$society}' AND `w_email` LIKE '%" . $search . "%'";
 
 	$result = mysqli_query($conn, $query);

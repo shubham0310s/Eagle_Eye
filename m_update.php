@@ -69,17 +69,10 @@ if (isset($_POST['update'])) {
     <h1>Member Detail</h1>
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
-      <label for="member_id">
-        <i class="fas fa-bomb"></i>
-      </label>
-      <input type="text" name="id" value="<?php if (isset($member))
-        echo "$member[member_id]"; ?>" placeholder="ID" id="member_id" readonly>
-
-
       <label for="name">
         <i class="fas fa-user"></i>
       </label>
-      <input type="text" name="name" placeholder="name" value="<?php if (isset($member))
+      <input type="text" name="name" placeholder="Name" value="<?php if (isset($member))
         echo "$member[m_name]"; ?>" id="name" required>
 
       <script>$(document).ready(function () {

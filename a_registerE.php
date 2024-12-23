@@ -137,35 +137,23 @@ if (isset($_POST['registerBtn'])) {
 		<h1>Welcome to Eagle Eye</h1>
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
-			<!-- <label for="admin_id">
-				<i class="fas fa-bomb"></i>
-			</label>
-			<input type="number" name="admin_id" placeholder="Admin ID" id="admin_id" min="100" max="999" required>
-
-
-			<script>$(document).ready(function () {
-					$("#admin_id").on("blur", function () {
-						if (!$(this).val().match(/^[1-9][0-9]{2}$/)) {
-							alert("Please enter a valid Admin ID ");
-						}
-					});
-				});
-			</script> -->
-
 
 			<label for="name">
 				<i class="fas fa-user"></i>
 			</label>
 			<input type="text" title="Enter your username" name="name" placeholder="Name" id="name" required>
 
-			<!-- <script>$(document).ready(function () {
+			<script>
+				$(document).ready(function () {
 					$("#name").on("blur", function () {
-						if (!$(this).val().match(/^[a-zA-Z] + [a-zA-Z]+$/)) {
-							alert("Please enter a valid name");
+						// Regular expression to validate the name (first and last name)
+						if (!$(this).val().match(/^[a-zA-Z]+ [a-zA-Z]+$/)) {
+							alert("Please enter a valid name. The name should contain only letters and a space between first and last names.");
 						}
 					});
 				});
-			</script> -->
+			</script>
+
 
 
 			<label for="society no">
@@ -174,14 +162,16 @@ if (isset($_POST['registerBtn'])) {
 			<input type="number" name="society_reg" placeholder="Society No." id="society_reg" min="1000" max="9999"
 				required>
 
-			<!-- <script>$(document).ready(function () {
+			<script>
+				$(document).ready(function () {
 					$("#society_reg").on("blur", function () {
-						if (!$(this).val().match(/^[1-9][0-9]{3}$/)) {
-							alert("Please enter a valid Admin ID ");
+						// Validate if the input matches the pattern for Admin ID (4 digits starting from 1)
+						if (!$(this).val().match(/^[1-9][0-9]{4}$/)) {
+							alert("Please enter a valid Society_reg (4 digits starting from 1000 to 9999).");
 						}
 					});
 				});
-			</script> -->
+			</script>
 
 			<label for="password">
 				<i class="fas fa-lock"></i>
@@ -214,7 +204,7 @@ if (isset($_POST['registerBtn'])) {
 
 			<script>$(document).ready(function () {
 					$("#email").on("blur", function () {
-						if (!$(this).val().match(/^.+@gmail\.com$/)) {
+						if (!$(this).val().match(/^.+@\gmail.com$/)) {
 							alert("Please enter a valid gmail address");
 						}
 					});

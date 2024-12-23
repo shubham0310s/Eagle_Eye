@@ -1,10 +1,14 @@
 <?php
 include("society_dbE.php");
 session_start();
+
+// Ensure the user is logged in as either watchman or admin
 if (!isset($_SESSION['w_logged_in']) && !isset($_SESSION['a_logged_in'])) {
 	header("Location: index.html");
 	exit;
 }
+
+// Determine the society based on the session
 if (isset($_SESSION["w_society"])) {
 	$society = $_SESSION["w_society"];
 	$find = $society . "_";
@@ -14,16 +18,16 @@ if (isset($_SESSION["w_society"])) {
 } else {
 	$society = "0000";
 }
+
 $output = '';
+// Search functionality
 if (isset($_POST["query"])) {
 	$search = mysqli_real_escape_string($conn, $_POST["query"]);
-	$query = "
-	SELECT * FROM `member_table` WHERE `society_reg`='{$society}' AND  
-	`m_name`LIKE '%" . $search . "%'
-	OR `society_reg`='{$society}' AND `residence` LIKE '%" . $search . "%' 
-	OR `society_reg`='{$society}' AND `flat_no` LIKE '%" . $search . "%'
-	OR `society_reg`='{$society}' AND  `m_email` LIKE '%" . $search . "%'";
-
+	$query = " SELECT * FROM `member_table` WHERE `society_reg`='{$society}' AND  
+    (`m_name` LIKE '%" . $search . "%'
+    OR `residence` LIKE '%" . $search . "%' 
+    OR `flat_no` LIKE '%" . $search . "%'
+    OR `m_email` LIKE '%" . $search . "%')";
 	$result = mysqli_query($conn, $query);
 } else {
 	$query = "";
@@ -31,51 +35,42 @@ if (isset($_POST["query"])) {
 
 if (isset($result)) {
 	if (mysqli_num_rows($result) > 0) {
-		$output .= '<div style="width: 1193px;
-		background-color: blanchedalmond;
-		margin-left: -173px;">
-						<table class="table table bordered">
-							<tr>
-								
-								<th>Name</th>
-								<th>Residence</th>
-								<th>phone_no</th>
-								<th>Flat_no</th>
-								<th>E-mail</th>
-							</tr>';
+		$output .= '<div style="width: 1193px; background-color: blanchedalmond; margin-left: -173px;">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Name</th>
+                            <th>Residence</th>
+                            <th>Phone Number</th>
+                            <th>Flat Number</th>
+                            <th>Email</th>
+                        </tr>';
 		while ($row = mysqli_fetch_array($result)) {
+			// Remove the society prefix from flat_no
 			$flat = str_replace($find, "", $row["flat_no"]);
 			$output .= '
-				<tr>
-			
-					<td>' . $row["m_name"] . '</td>
-					<td>' . $row["residence"] . '</td>
-					<td>' . $row["phone_no"] . '</td>
-					<td>' . $flat . '</td>
-					<td>' . $row["m_email"] . '</td>
-					
-				</tr>
-			';
+                <tr>
+                    <td>' . htmlspecialchars($row["m_name"]) . '</td>
+                    <td>' . htmlspecialchars($row["residence"]) . '</td>
+                    <td>' . htmlspecialchars($row["phone_no"]) . '</td>
+                    <td>' . htmlspecialchars($flat) . '</td>
+                    <td>' . htmlspecialchars($row["m_email"]) . '</td>
+                </tr>
+            ';
 		}
 		echo $output;
 	} else {
 		echo 'Data Not Found';
 	}
 } else {
-
-	$output .= '<div style="width: 1193px;
-	background-color: blanchedalmond;
-	margin-left: -173px;">
-					<table class="table table bordered">
-						<tr>
-								
-							<th>Name</th>
-							<th>Residence</th>
-							<th>phone_no</th>
-							<th>Flat_no</th>
-							<th>E-mail</th>
-						</tr>';
-
+	$output .= '<div style="width: 1193px; background-color: blanchedalmond; margin-left: -173px;">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Name</th>
+                        <th>Residence</th>
+                        <th>Phone Number</th>
+                        <th>Flat Number</th>
+                        <th>Email</th>
+                    </tr>';
 	echo $output;
 }
 ?>

@@ -41,10 +41,10 @@ if (isset($_POST['registerBtn'])) {
 							// create and format some variables for the database
 							$passwd = md5($passwd);
 							$flatno = $societyno . '_' . $flat;
-							mysqli_query($conn, "INSERT INTO `member_table`(`member_id`, `m_password`, `m_name`, `society_reg`, `residence`,phone_no, `flat_no`, `m_email`) VALUES ('{$id}','{$passwd}','{$name}','{$societyno}','{$residence}','{$phone_no}','{$flatno}','{$email}')");
+							mysqli_query($conn, "INSERT INTO `member_table`( `m_password`, `m_name`, `society_reg`, `residence`,phone_no, `flat_no`, `m_email`) VALUES ('{$id}','{$passwd}','{$name}','{$societyno}','{$residence}','{$phone_no}','{$flatno}','{$email}')");
 
 							// verify the user's account was created
-							$query = mysqli_query($conn, "SELECT * FROM `member_table` WHERE `member_id`='{$id}' AND `flat_no`='{$flatno}'");
+							$query = mysqli_query($conn, "SELECT * FROM `member_table` WHERE  `flat_no`='{$flatno}'");
 							if (mysqli_num_rows($query) == 1) {
 								$success = true;
 							}
@@ -123,7 +123,7 @@ if (isset($_POST['registerBtn'])) {
 			<label for="flat_no">
 				<i class="fa fa-home"></i>
 			</label>
-			<input type="text" name="flat_no" placeholder="Flat no" id="flat_no" required>
+			<input type="text" name="flat_no" placeholder="Flat no eg. A111" id="flat_no" required>
 
 			<label for="residence">
 				<i class="fas fa-building"></i>

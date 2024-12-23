@@ -149,10 +149,11 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
       load_data(); // Load all members initially
 
       function load_data(query = '') {
+        console.log("Search query: " + query); // Debugging: log the query being sent
         $.ajax({
           url: "w_fetch.php",
-          method: "post",
-          data: { query: query },
+          method: "POST", // Ensure this is POST
+          data: { query: query }, // Send the query
           success: function (data) {
             $('#result').html(data); // Display the result in the HTML element
           }
@@ -160,10 +161,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
       }
 
       $('#search_text').keyup(function () {
-        const search = $(this).val();
+        const search = $(this).val(); // Get the input value
+        console.log("Search input: " + search); // Debugging: log the input value
         load_data(search); // Pass the search value
       });
     });
+
   </script>
 
 </body>

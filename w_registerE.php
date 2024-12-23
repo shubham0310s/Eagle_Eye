@@ -12,7 +12,6 @@ $error_msg = "";
 
 if (isset($_POST['registerBtn'])) {
 	// Get all of the form data 
-	$id = mysqli_real_escape_string($conn, $_POST['watch_id']);
 	$name = mysqli_real_escape_string($conn, $_POST['name']);
 	$email = mysqli_real_escape_string($conn, $_POST['email']);
 	$societyno = mysqli_real_escape_string($conn, $_POST['society_reg']);
@@ -20,38 +19,34 @@ if (isset($_POST['registerBtn'])) {
 	$passwd_again = mysqli_real_escape_string($conn, $_POST['conpassword']);
 
 	// Check if all fields are filled
-	if ($name != "" && $passwd != "" && $passwd_again != "" && $societyno != "" && $email != "" && $id != "") {
+	if ($name != "" && $passwd != "" && $passwd_again != "" && $societyno != "" && $email != "") {
 		// Ensure the two passwords match
 		if ($passwd === $passwd_again) {
 			// Validate password strength
 			if (strlen($passwd) >= 8) {
 				// Check for duplicates in the database
-				$query = mysqli_query($conn, "SELECT * FROM `watchman_tabe` WHERE `watchman_id`='{$id}' OR `w_email`='{$email}'");
-				$check = mysqli_fetch_array($query);
+				$query = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `w_email`='{$email}'");
+				$check = mysqli_fetch_assoc($query);  // Corrected to use mysqli_fetch_assoc()
 
-				if ($id != $check["watchman_id"]) {
-					if ($email != $check["w_email"]) {
-						if (mysqli_num_rows($query) == 0) {
-							// Encrypt the password
-							$passwd = md5($passwd);
+				if ($email != $check["w_email"]) {
+					if (mysqli_num_rows($query) == 0) {
+						// Encrypt the password
+						$passwd = md5($passwd);
 
-							// Insert data into the database
-							mysqli_query($conn, "INSERT INTO `watchman_tabe`(`watchman_id`, `w_password`, `society_reg`, `w_name`, `w_email`) VALUES ('{$id}','{$passwd}','{$societyno}','{$name}','{$email}')");
+						// Insert data into the database
+						mysqli_query($conn, "INSERT INTO `watchman_table`(`w_password`, `society_reg`, `w_name`, `w_email`) VALUES ('{$passwd}', '{$societyno}', '{$name}', '{$email}')");
 
-							// Verify the data was successfully added
-							$query = mysqli_query($conn, "SELECT * FROM `watchman_tabe` WHERE `watchman_id`='{$id}'");
+						// Verify the data was successfully added
+						$query = mysqli_query($conn, "SELECT * FROM `watchman_table`");
 
-							if (mysqli_num_rows($query) == 1) {
-								$success = true;
-							}
-						} else {
-							$error_msg = 'Duplicate entry found. Please use unique values.';
+						if (mysqli_num_rows($query) == 1) {
+							$success = true;
 						}
 					} else {
-						$error_msg = 'The E-mail <b>' . $email . '</b> is already taken. Please use another.';
+						$error_msg = 'Duplicate entry found. Please use unique values.';
 					}
 				} else {
-					$error_msg = 'The ID <b>' . $id . '</b> is already taken. Please use another.';
+					$error_msg = 'The E-mail <b>' . $email . '</b> is already taken. Please use another.';
 				}
 			} else {
 				$error_msg = 'Your password is not strong enough. Please use another.';
@@ -63,6 +58,7 @@ if (isset($_POST['registerBtn'])) {
 		$error_msg = 'Please fill out all required fields.';
 	}
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -138,62 +134,6 @@ if (isset($_POST['registerBtn'])) {
 			<input type="password" name="conpassword" placeholder="Confirm Password" id="conpassword" required>
 
 			<input type="submit" name="registerBtn" value="ADD">
-		</form>
-
-		<!-- jQuery Validation -->
-		<script>
-			$(document).ready(function () {
-				$('#registrationForm').submit(function (e) {
-					// Prevent form submission
-					e.preventDefault();
-
-					// Validation for Name
-					const name = $('#name').val();
-					if (!/^[A-Za-z\s]+$/.test(name)) {
-						alert("Name can only contain letters and spaces.");
-						return false;
-					}
-
-					// Validation for Email
-					const email = $('#email').val();
-					if (!/.+@gmail\.com$/.test(email)) {
-						alert("Email must be a valid Gmail address.");
-						return false;
-					}
-
-					// Validation for Flat Number
-					const flatNo = $('#flat_no').val();
-					if (!/^[A-Za-z0-9\s\-]+$/.test(flatNo)) {
-						alert("Flat number can include letters, numbers, spaces, and hyphens.");
-						return false;
-					}
-
-					// Validation for Phone Number
-					const phoneNo = $('#phone_no').val();
-					if (!/^[0-9]{10}$/.test(phoneNo)) {
-						alert("Phone number must be exactly 10 digits.");
-						return false;
-					}
-
-					// Validation for Password
-					const password = $('#password').val();
-					if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=-])(?=.*[!@#$%]).{8,}/.test(password)) {
-						alert("Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters like !@#$%.");
-						return false;
-					}
-
-					// Validation for Confirm Password
-					const confirmPassword = $('#conpassword').val();
-					if (password !== confirmPassword) {
-						alert("Passwords do not match.");
-						return false;
-					}
-
-					// If all validations pass, submit the form
-					this.submit();
-				});
-			});
-		</script>
 		</form>
 	</div>
 </body>
