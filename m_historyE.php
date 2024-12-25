@@ -55,7 +55,18 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
           <span class="links_name">HOME</span>
         </a>
       </li>
-
+      <li>
+        <a href="m_bill.php" class="active">
+          <i class='bx bx-receipt' class="active"></i>
+          <span class="links_name">Bill</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_event.php">
+          <i class='bx bx-calendar'></i>
+          <span class="links_name">Event</span>
+        </a>
+      </li>
       <li>
         <a href="m_requestE.php">
           <i class='bx bx-list-ul'></i>
@@ -73,12 +84,12 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
       </li>
       <li>
         <a href="m_report.php">
-          <i class='bx bx-box'></i>
+          <i class='bx bx-user'></i>
           <span class="links_name">REPORT</span>
         </a>
       </li>
       <li>
-        <a href="m_historyE.php" class="active">
+        <a href="m_historyE.php">
           <i class='bx bx-box'></i>
           <span class="links_name">HISTORY</span>
         </a>

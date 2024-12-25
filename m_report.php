@@ -52,7 +52,18 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
           <span class="links_name">HOME</span>
         </a>
       </li>
-
+      <li>
+        <a href="m_bill.php ">
+          <i class='bx bx-receipt' class="active"></i>
+          <span class="links_name">Bill</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_event.php">
+          <i class='bx bx-calendar'></i>
+          <span class="links_name">Event</span>
+        </a>
+      </li>
       <li>
         <a href="m_requestE.php">
           <i class='bx bx-list-ul'></i>

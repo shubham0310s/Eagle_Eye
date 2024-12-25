@@ -25,7 +25,7 @@ $m = mysqli_query($conn, "SELECT * FROM `member_table`");
 $member = mysqli_num_rows($m);
 $a = mysqli_query($conn, "SELECT * FROM `admin_table`");
 $admin = mysqli_num_rows($a);
-$w = mysqli_query($conn, "SELECT * FROM `watchman_tabe`");
+$w = mysqli_query($conn, "SELECT * FROM `watchman_table`");
 $watchman = mysqli_num_rows($w);
 $v = mysqli_query($con, "SELECT * FROM `visitor_table`");
 $visitor = mysqli_num_rows($v);
@@ -42,6 +42,77 @@ $visitor = mysqli_num_rows($v);
   <!-- Boxicons CDN Link -->
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Event Box Container */
+    .announcement-box {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Event Box Header */
+    .announcement-box h3 {
+      font-size: 24px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Event List Styling */
+    .announcement-box ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .announcement-box li {
+      background-color: #ffffff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Hover Effect for List Items */
+    .announcement-box li:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Event Title */
+    .announcement-box li .event-title {
+      font-size: 18px;
+      color: #333;
+      font-weight: 500;
+      margin-right: 20px;
+      width: 70%;
+    }
+
+    /* Event Date */
+    .announcement-box li .event-date {
+      font-size: 14px;
+      color: #888;
+      text-align: right;
+      width: 30%;
+    }
+
+    /* No Events Found Message */
+    .announcement-box .no-events {
+      text-align: center;
+      font-size: 16px;
+      color: #888;
+      font-weight: 500;
+    }
+  </style>
 </head>
 
 <body>
@@ -59,7 +130,18 @@ $visitor = mysqli_num_rows($v);
           <span class="links_name">HOME</span>
         </a>
       </li>
-
+      <li>
+        <a href="m_bill.php">
+          <i class='bx bx-receipt' class="active"></i>
+          <span class="links_name">Bill</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_event.php">
+          <i class='bx bx-calendar'></i>
+          <span class="links_name">Event</span>
+        </a>
+      </li>
       <li>
         <a href="m_requestE.php">
           <i class='bx bx-list-ul'></i>

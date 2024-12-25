@@ -42,17 +42,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
         </a>
       </li>
       <li>
-        <a href="a_bill.php">
-          <i class='bx bx-receipt'></i>
-          <span class="links_name">Bill</span>
+        <a href="a_event.php">
+          <i class='bx bx-calendar'></i>
+          <span class="links_name"> Event</span>
         </a>
       </li>
-      <li>
-        <a href="a_historyE.php">
-          <i class='bx bx-list-ul'></i>
-          <span class="links_name">HISTORY</span>
-        </a>
-      </li>
+
       <li>
         <a href="a_reportm.php">
           <i class='bx bx-coin-stack'></i>
@@ -63,6 +58,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
         <a href="#" class="active">
           <i class='bx bx-coin-stack'></i>
           <span class="links_name">Watchman Report</span>
+        </a>
+      </li>
+      <li>
+        <a href="a_historyE.php">
+          <i class='bx bx-list-ul'></i>
+          <span class="links_name">HISTORY</span>
         </a>
       </li>
       <li class="log_out">
@@ -77,7 +78,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
     <nav>
       <div class="sidebar-button">
         <i class='bx bx-menu sidebarBtn'></i>
-        <span class="dashboard">REPORT</span>
+        <span class="dashboard"> REPORT</span>
       </div>
 
       <div class="search-box">
@@ -92,6 +93,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
           </div>
         </div>
         <br />
+
         <div id="result"></div>
       </div>
       <div style="clear:both"></div>
@@ -99,28 +101,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
       <br />
       <br />
       <br />
-      <!-- Start of account info function -->
-      <div class="action">
-        <div class="profile" onclick="menuToggle();">
-          <img src="images/host.png" alt="">
-        </div>
 
-        <div class="menu">
-          <h3>
-            <?php
-            echo "<div id='eagleN'><b>" . $aname . "</b></div>";
-            echo "<div id='eagleR'> Admin </div>";
-            echo "<div id='eagleG'>" . $aemail . "</div>";
-            ?>
-          </h3>
-          <ul>
-            <li>
-              <span class="material-icons icons-size">mode</span>
-              <a href="change_passE.php">Update Password</a>
-            </li>
-          </ul>
-        </div>
-      </div>
       <script>
         function menuToggle() {
           const toggleMenu = document.querySelector('.menu');

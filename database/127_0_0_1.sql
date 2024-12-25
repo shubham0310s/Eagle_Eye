@@ -38,6 +38,7 @@ CREATE TABLE `member_table` (
   `phone_no` BIGINT(10) NOT NULL DEFAULT 0,
   `flat_no` VARCHAR(9) NOT NULL,
   `m_email` VARCHAR(50) NOT NULL,
+  `payment_status` VARCHAR (10) NOT NULL,
   PRIMARY KEY (`member_id`, `flat_no`),
   UNIQUE KEY `m_email` (`m_email`),
   KEY `society_reg` (`society_reg`),
@@ -45,9 +46,9 @@ CREATE TABLE `member_table` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Insert data into `member_table`
-INSERT INTO `member_table` (`m_password`, `m_name`, `society_reg`, `residence`, `phone_no`, `flat_no`, `m_email`) VALUES
-('efa74ac8ab520985afdb5d587c272df3', 'bhargvi', 1234, 'Owned', 9435627847, '2222_A101', 'cosmicmarrow77@gmail.com'),
-('efa74ac8ab520985afdb5d587c272df3', 'Bhavya', 1234, 'Owned', 9359038738, '2222_A102', 'socialgaurav02@gmail.com');
+INSERT INTO `member_table` (`m_password`, `m_name`, `society_reg`, `residence`, `phone_no`, `flat_no`, `m_email`, `payment_status`) VALUES
+('efa74ac8ab520985afdb5d587c272df3', 'bhargvi', 1234, 'Owned', 9435627847, '2222_A101', 'cosmicmarrow77@gmail.com','Paid'),
+('efa74ac8ab520985afdb5d587c272df3', 'Bhavya', 1234, 'Owned', 9359038738, '2222_A102', 'socialgaurav02@gmail.com', 'Pending');
 
 -- --------------------------------------------------------
 -- Table structure for `watchman_table`
@@ -89,12 +90,31 @@ CREATE TABLE `visitor_table` (
 
 -- Insert data into `visitor_table`
 INSERT INTO `visitor_table` (`v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) VALUES
-('Ajay', '12.jpg', 1234, 9987685647, '2023-01-23 11:59:14.000000', 'Guest', 'A101', 'Approved');
+('Ajay', '12.jpg', 1234, 9987685647, '2023-01-23 11:59:14 ', 'Guest', 'A101', 'Approved');
 
 -- --------------------------------------------------------
 -- AUTO_INCREMENT for `visitor_table`
 -- --------------------------------------------------------
 ALTER TABLE `visitor_table`
   MODIFY `visitor_id` INT(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+-- --------------------------------------------------------
+-- Table structure for `event`
+-- --------------------------------------------------------
+CREATE TABLE `events` (
+  `event_id` INT AUTO_INCREMENT PRIMARY KEY,         -- Unique event ID
+  `event_title` VARCHAR(255) NOT NULL,               -- Title of the event
+  `event_start` DATETIME NOT NULL,                   -- Start date and time of the event
+  `event_end` DATETIME NOT NULL,                     -- End date and time of the event
+  `society_reg` INT NOT NULL,                        -- Society registration ID
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Timestamp of when the event was created
+  FOREIGN KEY (`society_reg`) REFERENCES admin_table(`society_reg`) -- Foreign key reference to society
+);
+
+
+INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `event_description`, `event_location`, `society_reg`)
+VALUES
+('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 'A community meeting to discuss neighborhood issues.', 'Community Hall', 1234),
+('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 'Annual meeting for society members.', 'Main Conference Room', 1234);
 
 COMMIT;

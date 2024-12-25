@@ -23,9 +23,8 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
 ?>
 
 <!DOCTYPE html>
-
+<!-- Designined by CodingLab | www.youtube.com/codinglabyt -->
 <html lang="en" dir="ltr">
-
 
 <head>
   <meta charset="UTF-8">
@@ -35,18 +34,19 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
   <title> Admin Dashboard </title>
   <link rel="shortcut icon" href="img/2.png" type="image/png">
   <link rel="stylesheet" href="css/dashE.css">
+  <!-- Boxicons CDN Link -->
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 
 <body>
   <div class="sidebar">
     <div class="logo-details">
       <img src="./img/logo.png" alt="Eagle Eye Logo" style="width: 50px; height: auto;" />
-      &emsp;&emsp;&emsp; <span class="logo_name">Eagle Eye</span>
-    </div>
 
+      &emsp;&emsp;&emsp;
+      <span class="logo_name">Eagle Eye</span>
+    </div>
     <ul class="nav-links">
       <li>
         <a href="a_dashboardE.php" class="active">
@@ -55,17 +55,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
         </a>
       </li>
       <li>
-        <a href="a_bill.php">
-          <i class='bx bx-receipt'></i>
-          <span class="links_name">Bill</span>
+        <a href="a_event.php">
+          <i class='bx bx-calendar'></i>
+          <span class="links_name">Event</span>
         </a>
       </li>
-      <li>
-        <a href="a_historyE.php">
-          <i class='bx bx-list-ul'></i>
-          <span class="links_name">HISTORY</span>
-        </a>
-      </li>
+
       <li>
         <a href="a_reportm.php">
           <i class='bx bx-coin-stack'></i>
@@ -76,6 +71,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
         <a href="a_reportw.php">
           <i class='bx bx-coin-stack'></i>
           <span class="links_name">Watchman Report</span>
+        </a>
+      </li>
+      <li>
+        <a href="a_historyE.php">
+          <i class='bx bx-list-ul'></i>
+          <span class="links_name">HISTORY</span>
         </a>
       </li>
       <li class="log_out">
@@ -132,13 +133,6 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
           const toggleMenu = document.querySelector('.menu');
           toggleMenu.classList.toggle('active')
         }
-        function mcheckdelete() {
-          return confirm('Are you sure you want to delete this record ');
-        }
-        function wcheckdelete() {
-          return confirm('Are you sure you want to delete this record ');
-        }
-
       </script>
 
       <!-- This end of account info function -->
@@ -148,51 +142,43 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
 
     <div class="home-content">
       <div class="overview-boxes">
-        <div class="box static-box">
+        <div class="box">
           <a href="m_registerE.php">
-            <!-- <div class="right-side"> -->
-            <div class="box-topic"></div>
-            <div class="number"> Add Member
+            <div class="right-side">
+              <div class="box-topic"></div>
+              <div class="number">Member Registration</div>
+              <div class="indicator">
+                <span class="text"></span>
+              </div>
             </div>
-            <!-- <div class="indicator">
-              - <i class='bx bx-up-arrow-alt'></i> -->
-            <!-- <span class="text"></span> -->
-            <!-- </div> -->
-            <!-- </div> -->
-            <!-- <i class='bx bx-cart-alt cart'></i> -->
-
           </a>
         </div>
-        <div class="overview-boxes"></div>
         <div class="box">
           <a href="w_registerE.php">
             <div class="right-side">
               <div class="box-topic"></div>
-              <div class="number">Add Watchman</div>
+              <div class="number">Watchman Registration</div>
               <div class="indicator">
-                <!-- <i class='bx bx-up-arrow-alt'></i> -->
                 <span class="text"></span>
               </div>
             </div>
-            <!-- <i class='bx bx-cart-alt cart'></i> -->
           </a>
         </div>
-
         <div class="box">
           <div class="right-side">
             <div class="box-topic">Total Member</div>
 
 
             <?php
+
             $m = mysqli_num_rows($mresult);
             echo "<div class='number'>" . $m . "</div>";
             ?>
             <div class="indicator">
               <i class='bx bx-up-arrow-alt'></i>
-              <span class="text">In Your Society</span>
+              <span class="text">IN Society</span>
             </div>
           </div>
-
           <i class='bx bx-user-circle bx-lg user'></i>
         </div>
 
@@ -206,7 +192,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
             ?>
             <div class="indicator">
               <i class='bx bx-up-arrow-alt'></i>
-              <span class="text">In Your Society</span>
+              <span class="text">In Society</span>
             </div>
           </div>
           <i class='bx bx-user-circle bx-lg user'></i>
@@ -214,61 +200,8 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
       </div>
     </div>
 
-    <!-- Event Calendar Section -->
-    <div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-      <h2 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Event Calendar</h2>
-      <div id="calendar"
-        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-family: Arial, sans-serif;">
-        <!-- Calendar days will be dynamically added here -->
-      </div>
-    </div>
-    <!DOCTYPE html>
-
-
-
-
     <script>
-      function generateCalendar() {
-        const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-        const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
-        const calendar = document.getElementById('calendar');
-        const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-        // Add week day headers
-        weekDays.forEach(day => {
-          const dayElement = document.createElement('div');
-          dayElement.textContent = day;
-          dayElement.style.fontWeight = 'bold';
-          dayElement.style.textAlign = 'center';
-          dayElement.style.borderBottom = '1px solid #ccc';
-          calendar.appendChild(dayElement);
-        });
-
-        // Add blank spaces for days before the first day
-        for (let i = 0; i < firstDayIndex; i++) {
-          const blankSpace = document.createElement('div');
-          calendar.appendChild(blankSpace);
-        }
-
-        // Add days of the current month
-        for (let i = 1; i <= daysInMonth; i++) {
-          const dayCell = document.createElement('div');
-          dayCell.textContent = i;
-          dayCell.style.padding = '10px';
-          dayCell.style.textAlign = 'center';
-          dayCell.style.border = '1px solid #ccc';
-          dayCell.style.cursor = 'pointer';
-          dayCell.onclick = () => alert(`Clicked on day ${i}`);
-          calendar.appendChild(dayCell);
-        }
-      }
-
-      // Generate the calendar on page load
-      generateCalendar();
-    </script>
-
-
-    <script>
       let sidebar = document.querySelector(".sidebar");
       let sidebarBtn = document.querySelector(".sidebarBtn");
       sidebarBtn.onclick = function () {
