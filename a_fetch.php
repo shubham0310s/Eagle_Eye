@@ -24,14 +24,14 @@ if (isset($_POST["query"])) {
 	$query = "
     SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}' AND 
     (`w_name` LIKE '%" . $search . "%' 
-    OR `w_email` LIKE '%" . $search . "%')";
+    OR `w_phno.` LIKE '%" . $search . "%')";
 
 	$result = mysqli_query($conn, $query);
 }
 
 if (isset($result)) {
 	if (mysqli_num_rows($result) > 0) {
-		$output .= '<div style="width: 1000px; background-color: blanchedalmond; margin-left: -169px;">
+		$output .= '<div style="width: 1000px; background-color: #F2F9FF; margin-left: -169px;">
                     <table class="table table-bordered">
                         <tr>
                             <th>Name</th>
@@ -41,7 +41,7 @@ if (isset($result)) {
 			$output .= '
             <tr>
                 <td>' . htmlspecialchars($row["w_name"]) . '</td>
-                <td>' . htmlspecialchars($row["w_email"]) . '</td>
+                <td>' . htmlspecialchars($row["w_phno."]) . '</td>
             </tr>';
 		}
 		echo $output;

@@ -62,7 +62,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                 </a>
             </li>
             <li>
-                <a href="m_event.php" class="active">
+                <a href="m_event.php">
                     <i class='bx bx-calendar'></i>
                     <span class="links_name">Event</span>
                 </a>

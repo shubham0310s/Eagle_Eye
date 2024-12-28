@@ -127,7 +127,7 @@ $result = mysqli_query($conn, $query);
             </div>
         </nav>
         <div class="container" style="padding: 35px;"></div>
-        <div class="container" style=" ; background-color: #fff; padding: 20px; border-radius: 8px;
+        <div class="container" style=" ; background-color: #fff; padding: 20px; border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
             <?php if (!empty($successMessage)): ?>
                 <div class="alert alert-success"
@@ -137,9 +137,9 @@ $result = mysqli_query($conn, $query);
             <?php endif; ?>
 
             <!-- Add Event Form-->
-            <div class="card" style="margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px">
+            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;  overflow: hidden;">
                 <div class="card-header"
-                    style="background-color: #007bff; color: #fff; padding: 15px; font-size: 1.25rem; font-weight: bold;">
+                    style="background-color:#081d45; color: #fff; padding: 15px; font-size: 1.25rem; font-weight: bold ; ">
                     Add New Event
                 </div>
                 <div class="card-body" style="padding: 20px;">
@@ -167,9 +167,9 @@ $result = mysqli_query($conn, $query);
             </div>
 
             <!-- Upcoming Events -->
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;  overflow: hidden;">
                 <div class="card-header"
-                    style="background-color: #007bff; color: #fff; padding: 15px; font-size: 1.25rem; font-weight: bold;">
+                    style="background-color: #081d45; color: #fff; padding: 15px; font-size: 1.25rem; font-weight: bold;">
                     Upcoming Events
                 </div>
                 <div class="card-body" style="padding: 20px;">
