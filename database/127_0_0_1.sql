@@ -60,7 +60,7 @@ CREATE TABLE `watchman_table` (
   `w_name` TEXT NOT NULL,
   `w_email` VARCHAR(50) NOT NULL,
   `w_docs` TEXT NOT NULL,
-  `w_phno.` INT(10) UNIQUE,
+  `w_phno` INT(10) UNIQUE,
   PRIMARY KEY (`watchman_id`),
   UNIQUE KEY `w_email` (`w_email`),
   KEY `society_reg` (`society_reg`),
@@ -68,8 +68,8 @@ CREATE TABLE `watchman_table` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Insert data into `watchman_table`
-INSERT INTO `watchman_table` (`w_password`, `society_reg`, `w_name`, `w_email`, `w_docs`,`w_phno.`) VALUES
-('dfaa192a5bf01f2e3966a69ac3bf2caa', 1234, 'watchmanA', 'watchmanA@gmail.com', 'Nitro_Wallpaper_06_3840x2400.jpg',9874563210);
+INSERT INTO `watchman_table` (`w_password`, `society_reg`, `w_name`, `w_email` ,`w_phno`) VALUES
+('dfaa192a5bf01f2e3966a69ac3bf2caa', 1234, 'watchmanA', 'watchmanA@gmail.com',9874563210);
 
 -- --------------------------------------------------------
 -- Table structure for `visitor_table`
