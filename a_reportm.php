@@ -90,7 +90,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
         <div class="form-group">
           <div class="input-group">
             <div class="search-box">
-              <input type="text" id="search_text" placeholder="Search...">
+              <input type="text" id="search_text" placeholder="Search..." style="color:black">
             </div>
           </div>
         </div>

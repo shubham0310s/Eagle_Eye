@@ -17,9 +17,9 @@ if (isset($_POST['registerBtn'])) {
 	$societyno = mysqli_real_escape_string($conn, $_POST['society_reg']);
 	$passwd = mysqli_real_escape_string($conn, $_POST['password']);
 	$passwd_again = mysqli_real_escape_string($conn, $_POST['conpassword']);
-
+	$phone = mysqli_real_escape_string($conn, $_POST['phone']);
 	// Check if all fields are filled
-	if ($name != "" && $passwd != "" && $passwd_again != "" && $societyno != "" && $email != "") {
+	if ($name != "" && $passwd != "" && $passwd_again != "" && $societyno != "" && $email != "" && $phone != "") {
 		// Ensure the two passwords match
 		if ($passwd === $passwd_again) {
 			// Validate password strength
