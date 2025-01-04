@@ -17,7 +17,8 @@ if (isset($_POST['registerBtn'])) {
 	$societyno = mysqli_real_escape_string($conn, $_POST['society_reg']);
 	$passwd = mysqli_real_escape_string($conn, $_POST['password']);
 	$passwd_again = mysqli_real_escape_string($conn, $_POST['conpassword']);
-	$phone = mysqli_real_escape_string($conn, $_POST['phone']);
+	$phone = mysqli_real_escape_string($conn, $_POST['phone_no']);
+
 	// Check if all fields are filled
 	if ($name != "" && $passwd != "" && $passwd_again != "" && $societyno != "" && $email != "" && $phone != "") {
 		// Ensure the two passwords match
@@ -26,27 +27,23 @@ if (isset($_POST['registerBtn'])) {
 			if (strlen($passwd) >= 8) {
 				// Check for duplicates in the database
 				$query = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `w_email`='{$email}'");
-				$check = mysqli_fetch_assoc($query);  // Corrected to use mysqli_fetch_assoc()
-
-				if ($email != $check["w_email"]) {
-					if (mysqli_num_rows($query) == 0) {
-						// Encrypt the password
-						$passwd = md5($passwd);
-
-						// Insert data into the database
-						mysqli_query($conn, "INSERT INTO `watchman_table`(`w_password`, `society_reg`, `w_name`, `w_email`) VALUES ('{$passwd}', '{$societyno}', '{$name}', '{$email}')");
-
-						// Verify the data was successfully added
-						$query = mysqli_query($conn, "SELECT * FROM `watchman_table`");
-
-						if (mysqli_num_rows($query) == 1) {
-							$success = true;
-						}
-					} else {
-						$error_msg = 'Duplicate entry found. Please use unique values.';
+				if ($query && mysqli_num_rows($query) > 0) {
+					$check = mysqli_fetch_assoc($query);
+					if ($check && $email == $check["w_email"]) {
+						$error_msg = 'The E-mail <b>' . $email . '</b> is already taken. Please use another.';
 					}
 				} else {
-					$error_msg = 'The E-mail <b>' . $email . '</b> is already taken. Please use another.';
+					// Encrypt the password
+					$passwd = md5($passwd);
+
+					// Insert data into the database
+					$insert_query = "INSERT INTO `watchman_table`(`w_password`, `society_reg`, `w_name`, `w_email`, `w_phno`) VALUES ('{$passwd}', '{$societyno}', '{$name}', '{$email}', '{$phone}')";
+
+					if (mysqli_query($conn, $insert_query)) {
+						$success = true;
+					} else {
+						$error_msg = 'Error inserting data: ' . mysqli_error($conn);
+					}
 				}
 			} else {
 				$error_msg = 'Your password is not strong enough. Please use another.';
@@ -60,6 +57,7 @@ if (isset($_POST['registerBtn'])) {
 }
 
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -90,6 +88,19 @@ if (isset($_POST['registerBtn'])) {
 
 <body>
 	<div class="register">
+		<!-- Display Success Message -->
+		<?php if (!empty($success)): ?>
+			<div style="color: green; margin-bottom: 10px; text-align: center;">
+				<?php echo "Registration successful! The watchman has been added."; ?>
+			</div>
+		<?php endif; ?>
+
+		<!-- Display Error Message -->
+		<?php if (!empty($error_msg)): ?>
+			<div style="color: red; margin-bottom: 10px; text-align: center;">
+				<?php echo $error_msg; ?>
+			</div>
+		<?php endif; ?>
 		<h1>Watchman Details</h1>
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 			<label for="name">

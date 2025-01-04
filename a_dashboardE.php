@@ -1,26 +1,50 @@
 <?php
-include("society_dbE.php");
+// Set secure session parameters before starting the session
+session_set_cookie_params([
+  'lifetime' => 0,
+  'path' => '/',
+  'domain' => 'localhost', // Update to your actual domain
+  'secure' => false,        // Set to true if using HTTPS
+  'httponly' => true,
+  'samesite' => 'Strict'
+]);
+
+// Start the session
 session_start();
-if (!isset($_SESSION['a_logged_in'])) {
+
+// Include the database connection
+include("society_dbE.php");
+
+// Check if the user is logged in
+if (!isset($_SESSION['a_logged_in']) || $_SESSION['a_logged_in'] !== true) {
+  // Redirect to login page if not logged in
   header("Location: index.html");
   exit;
 }
-if (isset($_SESSION["a_society"])) {
-  $society = $_SESSION["a_society"];
-  $mresult = mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'");
-  $wresult = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}'");
-  $find = $society . "_";
 
-}
-if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
-  $aname = $_SESSION['a_name'];
-  $aemail = $_SESSION['a_email'];
-} else {
-  $aname = "name";
-  $aemail = "Email@gmail.com";
+// Session timeout logic
+$timeout = 1800; // 30 minutes timeout
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
+  // Destroy the session if timed out
+  session_unset();
+  session_destroy();
+  header("Location: index.html?error=session_timeout");
+  exit;
 }
 
+// Update the last activity timestamp
+$_SESSION['last_activity'] = time();
+
+// Assign session variables
+$society = isset($_SESSION["a_society"]) ? $_SESSION["a_society"] : "";
+$aname = isset($_SESSION['a_name']) ? $_SESSION['a_name'] : "Name";
+$aemail = isset($_SESSION['a_email']) ? $_SESSION['a_email'] : "Email@gmail.com";
+
+// Fetch data from the database
+$mresult = $society ? mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'") : false;
+$wresult = $society ? mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}'") : false;
 ?>
+
 
 <!DOCTYPE html>
 <!-- Designined by CodingLab | www.youtube.com/codinglabyt -->
