@@ -88,19 +88,7 @@ if (isset($_POST['registerBtn'])) {
 
 <body>
 	<div class="register">
-		<!-- Display Success Message -->
-		<?php if (!empty($success)): ?>
-			<div style="color: green; margin-bottom: 10px; text-align: center;">
-				<?php echo "Registration successful! The watchman has been added."; ?>
-			</div>
-		<?php endif; ?>
 
-		<!-- Display Error Message -->
-		<?php if (!empty($error_msg)): ?>
-			<div style="color: red; margin-bottom: 10px; text-align: center;">
-				<?php echo $error_msg; ?>
-			</div>
-		<?php endif; ?>
 		<h1>Watchman Details</h1>
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 			<label for="name">
@@ -145,6 +133,18 @@ if (isset($_POST['registerBtn'])) {
 			<input type="password" name="conpassword" placeholder="Confirm Password" id="conpassword" required>
 
 			<input type="submit" name="registerBtn" value="ADD">
+			<?php
+			if (isset($success) && $success == true) {
+				echo '<script>
+                          alert("Addition successful.");
+                          window.location.assign("a_dashboardE.php");
+                      </script>';
+			}
+
+			if (isset($error_msg)) {
+				echo "<p>" . $error_msg . "</p>";
+			}
+			?>
 		</form>
 	</div>
 </body>

@@ -41,7 +41,7 @@ if (isset($_POST['registerBtn'])) {
 							// create and format some variables for the database
 							$passwd = md5($passwd);
 							$flatno = $societyno . '_' . $flat;
-							mysqli_query($conn, "INSERT INTO `member_table`( `m_password`, `m_name`, `society_reg`, `residence`,phone_no, `flat_no`, `m_email`) VALUES ('{$id}','{$passwd}','{$name}','{$societyno}','{$residence}','{$phone_no}','{$flatno}','{$email}')");
+							mysqli_query($conn, "INSERT INTO `member_table`( `m_password`, `m_name`, `society_reg`, `residence`,phone_no, `flat_no`, `m_email`) VALUES ('{$passwd}','{$name}','{$societyno}','{$residence}','{$phone_no}','{$flatno}','{$email}')");
 
 							// verify the user's account was created
 							$query = mysqli_query($conn, "SELECT * FROM `member_table` WHERE  `flat_no`='{$flatno}'");
@@ -219,7 +219,7 @@ if (isset($_POST['registerBtn'])) {
 			echo "<p>" . $error_msg . "</p>";
 		}
 		?>
-		<!-- <input type="submit" name="registerBtn" value="ADD"> -->
+
 		</form>
 	</div>
 </body>

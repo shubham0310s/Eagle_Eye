@@ -38,7 +38,6 @@ CREATE TABLE `member_table` (
   `phone_no` BIGINT(10) NOT NULL DEFAULT 0,
   `flat_no` VARCHAR(9) NOT NULL,
   `m_email` VARCHAR(50) NOT NULL,
-  `payment_status` VARCHAR (10) NOT NULL,
   PRIMARY KEY (`member_id`, `flat_no`),
   UNIQUE KEY `m_email` (`m_email`),
   KEY `society_reg` (`society_reg`),
@@ -46,9 +45,9 @@ CREATE TABLE `member_table` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Insert data into `member_table`
-INSERT INTO `member_table` (`m_password`, `m_name`, `society_reg`, `residence`, `phone_no`, `flat_no`, `m_email`, `payment_status`) VALUES
-('efa74ac8ab520985afdb5d587c272df3', 'bhargvi', 1234, 'Owned', 9435627847, '2222_A101', 'cosmicmarrow77@gmail.com','Paid'),
-('efa74ac8ab520985afdb5d587c272df3', 'Bhavya', 1234, 'Owned', 9359038738, '2222_A102', 'socialgaurav02@gmail.com', 'Pending');
+INSERT INTO `member_table` (`m_password`, `m_name`, `society_reg`, `residence`, `phone_no`, `flat_no`, `m_email`) VALUES
+('efa74ac8ab520985afdb5d587c272df3', 'bhargvi', 1234, 'Owned', 9435627847, '2222_A101', 'cosmicmarrow77@gmail.com'),
+('efa74ac8ab520985afdb5d587c272df3', 'Bhavya', 1234, 'Owned', 9359038738, '2222_A102', 'socialgaurav02@gmail.com');
 
 -- --------------------------------------------------------
 -- Table structure for `watchman_table`
