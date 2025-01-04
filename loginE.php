@@ -52,7 +52,7 @@ if (isset($_POST['logg'])) {	//setting credential
 		}
 
 	} elseif ($role == 'watchman') {
-		$query = mysqli_query($conn, "SELECT * FROM `watchman_tabe` WHERE `w_email`='{$email}' AND `w_password`='{$passwd}'");
+		$query = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `w_email`='{$email}' AND `w_password`='{$passwd}'");
 		if (mysqli_num_rows($query) == 1) {
 			while ($row = mysqli_fetch_array($query)) {
 				$_SESSION["w_id"] = $row["watchman_id"];

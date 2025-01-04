@@ -36,7 +36,7 @@ if (isset($_POST["query"])) {
 
 if (isset($result)) {
     if (mysqli_num_rows($result) > 0) {
-        $output .= '<div style="width: 1111px; background-color: blanchedalmond; margin-left: -169px;">
+        $output .= '<div style="width: 1111px; background-color:rgba(8, 29, 69, 0.25); margin-left: -169px;">
                     </style>
                     <table class="table table-bordered">
                         <tr>

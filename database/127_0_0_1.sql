@@ -113,9 +113,9 @@ CREATE TABLE `events` (
 );
 
 
-INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `event_description`, `event_location`, `society_reg`)
+INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `society_reg`)
 VALUES
-('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 'A community meeting to discuss neighborhood issues.', 'Community Hall', 1234),
-('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 'Annual meeting for society members.', 'Main Conference Room', 1234);
+('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 1234),
+('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 1234);
 
 COMMIT;

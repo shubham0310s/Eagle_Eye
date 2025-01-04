@@ -143,26 +143,38 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
     <div class="home-content">
       <div class="overview-boxes">
         <div class="box">
-          <a href="m_registerE.php">
-            <div class="right-side">
-              <div class="box-topic"></div>
-              <div class="number">Member Registration</div>
-              <div class="indicator">
-                <span class="text"></span>
+          <div class="right-side">
+            <div class="box-topic">Member</div>
+            <a href="m_registerE.php">
+              <div class="right-side">
+                <div class="box-topic"></div>
+                <div class="number">Registration</div>
+
               </div>
+            </a>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt'></i>
+              <span class="text">IN Society</span>
             </div>
-          </a>
+          </div>
+          <div class="indicator"></div>
+          <i class='bx bx-user-circle bx-lg user'></i>
         </div>
         <div class="box">
-          <a href="w_registerE.php">
-            <div class="right-side">
-              <div class="box-topic"></div>
-              <div class="number">Watchman Registration</div>
-              <div class="indicator">
-                <span class="text"></span>
+          <div class="right-side">
+            <div class="box-topic">Watchman</div>
+            <a href="w_registerE.php">
+              <div class="right-side">
+                <div class="box-topic"></div>
+                <div class="number">Registration</div>
               </div>
+            </a>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt'></i>
+              <span class="text">IN Society</span>
             </div>
-          </a>
+          </div>
+          <i class='bx bx-user-circle bx-lg user'></i>
         </div>
         <div class="box">
           <div class="right-side">
@@ -201,6 +213,7 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
     </div>
 
     <script>
+
 
       let sidebar = document.querySelector(".sidebar");
       let sidebarBtn = document.querySelector(".sidebarBtn");

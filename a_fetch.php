@@ -31,11 +31,11 @@ if (isset($_POST["query"])) {
 
 if (isset($result)) {
 	if (mysqli_num_rows($result) > 0) {
-		$output .= '<div style="width: 1000px; background-color: #F2F9FF; margin-left: -169px;">
+		$output .= '<div style="width: 1000px;background-color:rgba(8, 29, 69, 0.25); margin-left: -169px;">
                     <table class="table table-bordered">
                         <tr>
                             <th>Name</th>
-                            <th>Email</th>
+                            <th>Phone No.</th>
                         </tr>';
 		while ($row = mysqli_fetch_array($result)) {
 			$output .= '
@@ -50,11 +50,11 @@ if (isset($result)) {
 	}
 } else {
 	// Display empty table if no result is found or query is not set
-	$output .= '<div style="width: 1193px; background-color: blanchedalmond; margin-left: -173px;">
+	$output .= '<div style="width: 1193px; background-color:rgba(8, 29, 69, 0.25); margin-left: -173px;">
                 <table class="table table-bordered">
                     <tr>
                         <th>Name</th>
-                        <th>Email</th>
+                        <th>Phone No.</th>
                     </tr>';
 	echo $output;
 }
