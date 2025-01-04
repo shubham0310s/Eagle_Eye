@@ -125,111 +125,81 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
         <!-- This end of account info function -->
     </nav>
     <div class="home-content">
-
       <div class="sales-boxes">
         <div class="recent-sales box">
-
           <div class="sales-details">
             <ul class="details">
               <li class="topic">Image</li>
               <?php
               if ($vresult) {
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li><a href='visitor_image/" . $row['v_image'] . "' > <img src='visitor_image/" . $row['v_image'] . "' height = '45px' width = '45px'></a></li>";
+                  echo "<li><a href='visitor_image/" . $row['v_image'] . "' > <img src='visitor_image/" . $row['v_image'] . "' height='25px' width='45px'></a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
                 ?>
-
               </ul>
               <ul class="details">
                 <li class="topic">Name</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['v_name'] . "</a></li>";
+                  echo "<li><a>" . $row['v_name'] . "</a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
-
                 ?>
-
-
               </ul>
               <ul class="details">
                 <li class="topic">Phone_no</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['phone_no'] . "</a></li>";
+                  echo "<li><a>" . $row['phone_no'] . "</a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
-
                 ?>
-
               </ul>
               <ul class="details">
                 <li class="topic">Flat_no</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['flat_no'] . "</a></li>";
+                  echo "<li><a>" . $row['flat_no'] . "</a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
-
                 ?>
-
               </ul>
               <ul class="details">
                 <li class="topic">Date</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['visiting_date'] . "</a></li>";
+                  echo "<li><a>" . $row['visiting_date'] . "</a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
-
                 ?>
-
-
               </ul>
               <ul class="details">
                 <li class="topic">Reason</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['visiting_purpose'] . "</a></li>";
+                  echo "<li><a>" . $row['visiting_purpose'] . "</a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
-
                 ?>
-
-
               </ul>
               <ul class="details">
                 <li class="topic">Status</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
-
-                  echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['status'] . "</a></li>";
+                  echo "<li><a>" . $row['status'] . "</a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
-
                 ?>
-
               </ul>
               <?php
               }
               ?>
           </div>
-
         </div>
       </div>
+    </div>
+
   </section>
 
   <script>
