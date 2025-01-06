@@ -1,5 +1,5 @@
 <?php
-include("visitor_db.php");
+include("society_dbE.php");
 session_start();
 if (!isset($_SESSION['m_logged_in'])) {
   header("Location: index.html");
@@ -16,14 +16,14 @@ if (isset($_SESSION["m_flat"])) {
 
 // Execute the query
 $sql = "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='pending'";
-$result = mysqli_query($con, $sql);
+$result = mysqli_query($conn, $sql);
 //var_dump($result);
 
 if (isset($_POST['id']) && isset($_POST['ad'])) {
   $id = $_POST['id'];
   $ad = $_POST['ad'];
 
-  $vquery = mysqli_query($con, "UPDATE `visitor_table` SET `status`='{$ad}' WHERE `visitor_id`='{$id}' AND`flat_no`= '{$flat}'");
+  $vquery = mysqli_query($conn, "UPDATE `visitor_table` SET `status`='{$ad}' WHERE `visitor_id`='{$id}' AND`flat_no`= '{$flat}'");
 
 }
 if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION['m_flat']) && isset($_SESSION['m_society'])) {
@@ -83,7 +83,7 @@ if (mysqli_num_rows($result) == 0) {
         </a>
       </li>
       <li>
-        <a href="m_event.php" class="active">
+        <a href="m_event.php">
           <i class='bx bx-calendar'></i>
           <span class="links_name">Event</span>
         </a>

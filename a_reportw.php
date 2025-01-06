@@ -1,18 +1,34 @@
 <?php
-include("visitor_db.php");
+// Set secure session parameters before starting the session
+session_set_cookie_params([
+  'lifetime' => 0,
+  'path' => '/',
+  'domain' => 'localhost', // Replace with your actual domain
+  'secure' => false,       // Set to true if using HTTPS
+  'httponly' => true,
+  'samesite' => 'Strict'
+]);
+
+// Start the session
 session_start();
-if (!isset($_SESSION['a_logged_in'])) {
+
+// Include the database connection
+include("society_dbE.php");
+
+// Check if the user is logged in
+if (!isset($_SESSION['a_logged_in']) || $_SESSION['a_logged_in'] !== true) {
   header("Location: index.html");
   exit;
 }
-if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
-  $aname = $_SESSION['a_name'];
-  $aemail = $_SESSION['a_email'];
-} else {
-  $aname = "name";
-  $aemail = "Email@gmail.com";
-}
+
+// Assign session variables with fallback values
+$aname = isset($_SESSION['a_name']) ? $_SESSION['a_name'] : "Name";
+$aemail = isset($_SESSION['a_email']) ? $_SESSION['a_email'] : "Email@gmail.com";
+
+// Optional: Log user session details for debugging (can be removed in production)
+error_log("Session started for: $aname ($aemail)");
 ?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -47,7 +63,12 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email'])) {
           <span class="links_name"> Event</span>
         </a>
       </li>
-
+      <li>
+        <a href="a_chat.php">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">Chat</span>
+        </a>
+      </li>
       <li>
         <a href="a_reportm.php">
           <i class='bx bx-coin-stack'></i>

@@ -165,7 +165,6 @@ if (isset($_POST['registerBtn'])) {
 			<script>
 				$(document).ready(function () {
 					$("#society_reg").on("blur", function () {
-						// Validate if the input matches the pattern for Admin ID (4 digits starting from 1)
 						if (!$(this).val().match(/^[1-9][0-9]{4}$/)) {
 							alert("Please enter a valid Society_reg (4 digits starting from 1000 to 9999).");
 						}

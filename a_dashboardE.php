@@ -28,7 +28,7 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 
   // Destroy the session if timed out
   session_unset();
   session_destroy();
-  header("Location: index.html?error=session_timeout");
+  header("Location: index.html");
   exit;
 }
 
@@ -82,6 +82,12 @@ $wresult = $society ? mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE 
         <a href="a_event.php">
           <i class='bx bx-calendar'></i>
           <span class="links_name">Event</span>
+        </a>
+      </li>
+      <li>
+        <a href="a_chat.php">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">Chat</span>
         </a>
       </li>
 

@@ -1,5 +1,5 @@
 <?php
-include("visitor_db.php");
+include("society_dbE.php");
 session_start();
 if (!isset($_SESSION['m_logged_in'])) {
 	header("Location: index.html");
@@ -15,14 +15,14 @@ if (isset($_SESSION["m_flat"]) && isset($_SESSION['m_society'])) {
 }
 $output = '';
 if (isset($_POST["query"])) {	//var_dump($flat);
-	$search = mysqli_real_escape_string($con, $_POST["query"]);
+	$search = mysqli_real_escape_string($conn, $_POST["query"]);
 	$query = "
 	SELECT * FROM visitor_table
 	WHERE flat_no = '{$flat}' AND  v_name LIKE '%" . $search . "%'
 	OR flat_no = '{$flat}' AND phone_no LIKE '%" . $search . "%'
 	OR flat_no = '{$flat}' AND status LIKE '%" . $search . "%' ";
 
-	$result = mysqli_query($con, $query);
+	$result = mysqli_query($conn, $query);
 }
 
 

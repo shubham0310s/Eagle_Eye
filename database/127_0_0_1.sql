@@ -36,7 +36,7 @@ CREATE TABLE `member_table` (
   `society_reg` INT(4) NOT NULL,
   `residence` TEXT NOT NULL DEFAULT 'Not specified',
   `phone_no` BIGINT(10) NOT NULL DEFAULT 0,
-  `flat_no` VARCHAR(9) NOT NULL,
+  `flat_no` VARCHAR(9) NOT NULL,11
   `m_email` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`member_id`, `flat_no`),
   UNIQUE KEY `m_email` (`m_email`),
@@ -116,5 +116,9 @@ INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `society_reg`)
 VALUES
 ('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 1234),
 ('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 1234);
+
+-- --------------------------------------------------------
+-- Table structure for `Chat`
+-- --------------------------------------------------------
 
 COMMIT;

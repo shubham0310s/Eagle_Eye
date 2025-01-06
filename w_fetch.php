@@ -45,7 +45,7 @@ if (isset($result)) {
                             <th>Phone Number</th>
                             <th>Flat Number</th>
                             <th>Email</th>
-                            <th>Payment</th>
+                           
                         </tr>';
         while ($row = mysqli_fetch_array($result)) {
             // Remove the society prefix from flat_no
@@ -57,7 +57,7 @@ if (isset($result)) {
                     <td>' . htmlspecialchars($row["phone_no"]) . '</td>
                     <td>' . htmlspecialchars($flat) . '</td>
                     <td class="email-column">' . htmlspecialchars($row["m_email"]) . '</td>
-                    <td>' . htmlspecialchars($row["payment_status"]) . '</td>
+                  
                 </tr>
             ';
         }
@@ -74,7 +74,7 @@ if (isset($result)) {
                         <th>Phone Number</th>
                         <th>Flat Number</th>
                         <th>Email</th>
-                        <th>Payment</th>
+                   
                     </tr>';
     echo $output;
 }
