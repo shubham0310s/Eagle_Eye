@@ -132,14 +132,20 @@ $visitor = mysqli_num_rows($v);
       </li>
       <li>
         <a href="m_bill.php">
-          <i class='bx bx-receipt' class="active"></i>
-          <span class="links_name">Bill</span>
+          <i class='bx bx-receipt'></i>
+          <span class="links_name">BILL</span>
         </a>
       </li>
       <li>
         <a href="m_event.php">
           <i class='bx bx-calendar'></i>
-          <span class="links_name">Event</span>
+          <span class="links_name">EVENT</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_chat.php">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
@@ -157,12 +163,7 @@ $visitor = mysqli_num_rows($v);
           ?>
         </a>
       </li>
-      <li>
-        <a href="m_report.php">
-          <i class='bx bx-box'></i>
-          <span class="links_name">REPORT</span>
-        </a>
-      </li>
+
       <li>
         <a href="m_historyE.php">
           <i class='bx bx-box'></i>

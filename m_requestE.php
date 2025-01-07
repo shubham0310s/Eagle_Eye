@@ -78,14 +78,20 @@ if (mysqli_num_rows($result) == 0) {
       </li>
       <li>
         <a href="m_bill.php">
-          <i class='bx bx-receipt' class="active"></i>
-          <span class="links_name">Bill</span>
+          <i class='bx bx-receipt'></i>
+          <span class="links_name">BILL</span>
         </a>
       </li>
       <li>
         <a href="m_event.php">
           <i class='bx bx-calendar'></i>
-          <span class="links_name">Event</span>
+          <span class="links_name">EVENT</span>
+        </a>
+      </li>
+      <li>
+        <a href="m_chat.php">
+          <i class='bx bx-box'></i>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
@@ -104,12 +110,7 @@ if (mysqli_num_rows($result) == 0) {
           ?>
         </a>
       </li>
-      <li>
-        <a href="m_report.php">
-          <i class='bx bx-box'></i>
-          <span class="links_name">REPORT</span>
-        </a>
-      </li>
+
       <li>
         <a href="m_historyE.php">
           <i class='bx bx-box'></i>

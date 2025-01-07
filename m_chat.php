@@ -56,8 +56,8 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                 </a>
             </li>
             <li>
-                <a href="" class="active">
-                    <i class='bx bx-receipt' class="active"></i>
+                <a href="">
+                    <i class='bx bx-receipt'></i>
                     <span class="links_name">BILL</span>
                 </a>
             </li>
@@ -68,8 +68,8 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                 </a>
             </li>
             <li>
-                <a href="m_chat.php">
-                    <i class='bx bx-chat'></i>
+                <a href="m_chat.php" class="active">
+                    <i class='bx bx-calendar'></i>
                     <span class="links_name">CHAT</span>
                 </a>
             </li>
@@ -107,7 +107,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
         <nav>
             <div class="sidebar-button">
                 <i class='bx bx-menu sidebarBtn'></i>
-                <span class="dashboard">BILL</span>
+                <span class="dashboard">CHAT</span>
             </div>
             <!-- This start of account info function -->
             <meta charset="UTF-8">
@@ -153,79 +153,8 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
         </nav>
 
         <div class="home-content">
-            <div class="overview-boxes">
-                <div class="box">
-                    <a href="javascript:void(0)" id="maintenance-btn">
-                        <div class="right-side">
-                            <div class="box-topic"></div>
-                            <div class="number">Maintenance</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="box">
-                    <a href="">
-                        <div class="right-side">
-                            <div class="box-topic"></div>
-                            <div class="number">Rent Payment</div>
 
-                        </div>
-
-                    </a>
-                </div>
-                <div class="box">
-                    <a href="">
-                        <div class="right-side">
-                            <div class="box-topic"></div>
-                            <div class="number">Meter Reading</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="box">
-                    <a href="">
-                        <div class="right-side">
-                            <div class="box-topic"></div>
-                            <div class="number">Pay Maid/Cook</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
         </div>
-
-        <div id="popup"
-            style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); z-index: 1000; width: 300px; padding: 20px; text-align: center;">
-            <h2 style="margin-bottom: 20px;">Pay Maintenance</h2>
-            <form action="process_payment.php" method="POST">
-                <input type="text" name="amount" placeholder="Enter Amount"
-                    style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;"
-                    required>
-                <button type="submit"
-                    style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Pay</button>
-                <button type="button" id="close-btn"
-                    style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-            </form>
-        </div>
-        <div id="overlay"
-            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;">
-        </div>
-
-        <script>
-            // JavaScript for Popup
-            document.getElementById('maintenance-btn').addEventListener('click', function () {
-                document.getElementById('popup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            });
-
-            document.getElementById('close-btn').addEventListener('click', function () {
-                document.getElementById('popup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            });
-
-            document.getElementById('overlay').addEventListener('click', function () {
-                document.getElementById('popup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            });
-        </script>
     </section>
     <script>
         let sidebar = document.querySelector(".sidebar");

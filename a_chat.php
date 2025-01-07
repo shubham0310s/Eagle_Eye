@@ -193,54 +193,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
         </nav>
 
         <div class="home-content">
-            <h2>Chat</h2>
-            <div class="chat-box" id="chat-box"
-                style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                <!-- Messages will appear here -->
-            </div>
-            <form id="chat-form">
-                <input type="text" id="message" placeholder="Type your message here" style="width: 80%; padding: 5px;">
-                <button type="submit" style="padding: 5px;">Send</button>
-            </form>
+
         </div>
-        <script>
-            const socket = new WebSocket("ws://localhost:8080/chat");
-
-            socket.onmessage = function (event) {
-                const messageData = JSON.parse(event.data);
-                const chatBox = document.getElementById('chat-box');
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
-
-                // Add styles based on sender role
-                if (messageData.sender_role === 'admin') {
-                    messageDiv.style.backgroundColor = '#f0f0f0';
-                } else {
-                    messageDiv.style.backgroundColor = '#d0f0d0';
-                }
-
-                messageDiv.style.padding = '5px';
-                messageDiv.style.margin = '5px';
-                messageDiv.style.borderRadius = '5px';
-                messageDiv.innerHTML = `<strong>${messageData.sender_role}:</strong> ${messageData.message} <br><small>${messageData.timestamp}</small>`;
-                chatBox.appendChild(messageDiv);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            };
-
-            document.getElementById('chat-form').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const message = document.getElementById('message').value;
-                const senderId = "<?php echo $_SESSION['id']; ?>";
-                const senderRole = "admin";  // This will vary for Member/Watchman
-
-                if (message) {
-                    socket.send(JSON.stringify({ sender_id: senderId, sender_role: senderRole, message: message }));
-                    document.getElementById('message').value = '';
-                }
-            });
-        </script>
-
-
         <script>
 
 
