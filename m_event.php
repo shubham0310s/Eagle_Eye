@@ -1,6 +1,6 @@
 <?php
 include("society_dbE.php");
-include("visitor_db.php");
+// include("visitor_db.php");
 session_start();
 if (!isset($_SESSION['m_logged_in'])) {
     header("Location: index.html");
@@ -27,7 +27,7 @@ $a = mysqli_query($conn, "SELECT * FROM `admin_table`");
 $admin = mysqli_num_rows($a);
 $w = mysqli_query($conn, "SELECT * FROM `watchman_table`");
 $watchman = mysqli_num_rows($w);
-$v = mysqli_query($con, "SELECT * FROM `visitor_table`");
+$v = mysqli_query($conn, "SELECT * FROM `visitor_table`");
 $visitor = mysqli_num_rows($v);
 
 ?><!DOCTYPE html>
@@ -228,104 +228,50 @@ $visitor = mysqli_num_rows($v);
 
         </nav>
         <div class="home-content">
-            <h2 style="text-align: center; color: #333; font-family: Arial, sans-serif;">Event Calendar</h2>
-            <div class="calendar"
-                style="max-width: 700px; margin: 20px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
-                <div class="calendar-header"
-                    style="background-color: #000000; color: #fff; text-align: center; padding: 15px; font-size: 1.5rem;">
-                    <?php
-                    $currentMonth = date('F');
-                    $currentYear = date('Y');
-                    echo "$currentMonth $currentYear";
-                    ?>
-                </div>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Sun
-                            </th>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Mon
-                            </th>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Tue
-                            </th>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Wed
-                            </th>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Thu
-                            </th>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Fri
-                            </th>
-                            <th style="background-color: #34a853; color: #fff; padding: 10px; text-align: center;">Sat
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-                        $firstDayOfMonth = date('w', strtotime(date('Y-m-01')));
-                        $day = 1;
-
-                        for ($i = 0; $i < 6; $i++) {
-                            echo "<tr>";
-                            for ($j = 0; $j < 7; $j++) {
-                                if ($i === 0 && $j < $firstDayOfMonth || $day > $daysInMonth) {
-                                    echo "<td style='height: 80px; text-align: center; vertical-align: middle; border: 1px solid #ddd;'></td>";
-                                } else {
-                                    echo "<td class='date-cell' data-date='" . date('Y-m-') . $day . "' style='height: 80px; text-align: center; vertical-align: middle; border: 1px solid #ddd; cursor: pointer;'>
-                                    <span class='event-day" . ($day === (int) date('j') ? " today" : "") . "' style='background-color: blue; color: white; border-radius: 50%; width: 40px; height: 40px; line-height: 40px; display: inline-block;'>$day</span>
-                                  </td>";
-                                    $day++;
-                                }
-                            }
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Modal -->
-            <div class="modal-overlay"
-                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000;">
-            </div>
-            <div class="modal"
-                style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 400px; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); z-index: 1001;">
-                <h3 style="margin: 0 0 10px; font-size: 1.5rem; color: #333;">Event Details</h3>
-                <p class="modal-content" style="font-size: 1rem; color: #555;">No events available.</p>
-                <button class="close-btn"
-                    style="display: block; text-align: center; margin-top: 20px; padding: 10px; background-color: #000000; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-            </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const dateCells = document.querySelectorAll('.date-cell');
-                    const modal = document.querySelector('.modal');
-                    const overlay = document.querySelector('.modal-overlay');
-                    const closeModal = document.querySelector('.close-btn');
-                    const modalContent = document.querySelector('.modal-content');
-
-                    dateCells.forEach(cell => {
-                        cell.addEventListener('click', () => {
-                            const selectedDate = cell.getAttribute('data-date');
-                            fetch(`fetch_events.php?date=${selectedDate}`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    modalContent.innerHTML = data.length > 0
-                                        ? data.map(event => `<p><strong>${event.title}</strong><br>${event.start}</p>`).join('')
-                                        : '<p>No events available for this date.</p>';
-                                    modal.style.display = 'block';
-                                    overlay.style.display = 'block';
-                                });
-                        });
-                    });
-
-                    closeModal.addEventListener('click', () => {
-                        modal.style.display = 'none';
-                        overlay.style.display = 'none';
-                    });
-                });
-            </script>
         </div>
 
+        <!-- Modal -->
+        <div class="modal-overlay"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000;">
+        </div>
+        <div class="modal"
+            style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 400px; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); z-index: 1001;">
+            <h3 style="margin: 0 0 10px; font-size: 1.5rem; color: #333;">Event Details</h3>
+            <p class="modal-content" style="font-size: 1rem; color: #555;">No events available.</p>
+            <button class="close-btn"
+                style="display: block; text-align: center; margin-top: 20px; padding: 10px; background-color: #000000; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const dateCells = document.querySelectorAll('.date-cell');
+                const modal = document.querySelector('.modal');
+                const overlay = document.querySelector('.modal-overlay');
+                const closeModal = document.querySelector('.close-btn');
+                const modalContent = document.querySelector('.modal-content');
+
+                dateCells.forEach(cell => {
+                    cell.addEventListener('click', () => {
+                        const selectedDate = cell.getAttribute('data-date');
+                        fetch(`fetch_events.php?date=${selectedDate}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                modalContent.innerHTML = data.length > 0
+                                    ? data.map(event => `<p><strong>${event.title}</strong><br>${event.start}</p>`).join('')
+                                    : '<p>No events available for this date.</p>';
+                                modal.style.display = 'block';
+                                overlay.style.display = 'block';
+                            });
+                    });
+                });
+
+                closeModal.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    overlay.style.display = 'none';
+                });
+            });
+        </script>
+        </div>
         <div class="announcement-box"
             style="max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <h3 style="margin: 0 0 15px; font-size: 1.5rem; font-weight: 600; color: #333; text-align: center;">Upcoming

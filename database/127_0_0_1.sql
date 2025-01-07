@@ -36,10 +36,11 @@ CREATE TABLE `member_table` (
   `society_reg` INT(4) NOT NULL,
   `residence` TEXT NOT NULL DEFAULT 'Not specified',
   `phone_no` BIGINT(10) NOT NULL DEFAULT 0,
-  `flat_no` VARCHAR(9) NOT NULL,11
+  `flat_no` VARCHAR(9) NOT NULL,
   `m_email` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`member_id`, `flat_no`),
+  PRIMARY KEY (`member_id`),
   UNIQUE KEY `m_email` (`m_email`),
+  UNIQUE KEY `flat_no` (`flat_no`),
   KEY `society_reg` (`society_reg`),
   CONSTRAINT `member_table_ibfk_1` FOREIGN KEY (`society_reg`) REFERENCES `admin_table` (`society_reg`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -59,7 +60,7 @@ CREATE TABLE `watchman_table` (
   `w_name` TEXT NOT NULL,
   `w_email` VARCHAR(50) NOT NULL,
   `w_docs` TEXT NOT NULL,
-  `w_phno` INT(10) UNIQUE,
+  `w_phno` BIGINT(10) UNIQUE,
   PRIMARY KEY (`watchman_id`),
   UNIQUE KEY `w_email` (`w_email`),
   KEY `society_reg` (`society_reg`),
@@ -67,8 +68,8 @@ CREATE TABLE `watchman_table` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Insert data into `watchman_table`
-INSERT INTO `watchman_table` (`w_password`, `society_reg`, `w_name`, `w_email` ,`w_phno`) VALUES
-('dfaa192a5bf01f2e3966a69ac3bf2caa', 1234, 'watchmanA', 'watchmanA@gmail.com',9874563210);
+INSERT INTO `watchman_table` (`w_password`, `society_reg`, `w_name`, `w_email`, `w_phno`) VALUES
+('dfaa192a5bf01f2e3966a69ac3bf2caa', 1234, 'watchmanA', 'watchmanA@gmail.com', 9874563210);
 
 -- --------------------------------------------------------
 -- Table structure for `visitor_table`
@@ -90,35 +91,39 @@ CREATE TABLE `visitor_table` (
 
 -- Insert data into `visitor_table`
 INSERT INTO `visitor_table` (`v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) VALUES
-('Ajay', '12.jpg', 1234, 9987685647, '2023-01-23 11:59:14 ', 'Guest', 'A101', 'Approved');
+('Ajay', '12.jpg', 1234, 9987685647, '2023-01-23 11:59:14', 'Guest', '2222_A101', 'Approved');
 
 -- --------------------------------------------------------
--- AUTO_INCREMENT for `visitor_table`
--- --------------------------------------------------------
-ALTER TABLE `visitor_table`
-  MODIFY `visitor_id` INT(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
--- --------------------------------------------------------
--- Table structure for `event`
+-- Table structure for `events`
 -- --------------------------------------------------------
 CREATE TABLE `events` (
-  `event_id` INT AUTO_INCREMENT PRIMARY KEY,         -- Unique event ID
-  `event_title` VARCHAR(255) NOT NULL,               -- Title of the event
-  `event_start` DATETIME NOT NULL,                   -- Start date and time of the event
-  `event_end` DATETIME NOT NULL,                     -- End date and time of the event
-  `society_reg` INT NOT NULL,                        -- Society registration ID
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Timestamp of when the event was created
-  FOREIGN KEY (`society_reg`) REFERENCES admin_table(`society_reg`) -- Foreign key reference to society
+  `event_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `event_title` VARCHAR(255) NOT NULL,
+  `event_start` DATETIME NOT NULL,
+  `event_end` DATETIME NOT NULL,
+  `society_reg` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`society_reg`) REFERENCES `admin_table`(`society_reg`)
 );
 
-
+-- Insert data into `events`
 INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `society_reg`)
 VALUES
 ('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 1234),
 ('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 1234);
 
 -- --------------------------------------------------------
--- Table structure for `Chat`
+-- Table structure for `payments`
 -- --------------------------------------------------------
+CREATE TABLE `payments` (
+  `payment_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `society_reg` INT(4) NOT NULL,
+  `flat_no` VARCHAR(9) NOT NULL,
+  `amount` DECIMAL(10, 2) NOT NULL,
+  `payment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `status` VARCHAR(20) DEFAULT 'Pending',
+  CONSTRAINT `fk_flat_no` FOREIGN KEY (`flat_no`) REFERENCES `member_table`(`flat_no`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_society_reg` FOREIGN KEY (`society_reg`) REFERENCES `member_table`(`society_reg`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 COMMIT;

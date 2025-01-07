@@ -296,29 +296,6 @@ if (isset($_POST['sent'])) {
             <label for="fname">Reason to meet</label>
             <input type="text" id="fname" name="meet" placeholder="Reason " required><br>
 
-            <div class="file-upload-wrapper" data-text=" Image ">
-              <input type="file" name="file" id="file" accept="image/png, image/jpeg" onchange="validateImage()" />
-              <p id="error-message" style="color: red; display: none;">Please upload only PNG or JPEG images.</p>
-            </div><br>
-
-            <script>
-              function validateImage() {
-                var file = document.getElementById("file").files[0];
-                var fileType = file ? file.type : "";
-
-                // Check if the file is an image (PNG or JPEG)
-                if (fileType !== "image/png" && fileType !== "image/jpeg") {
-                  document.getElementById("error-message").style.display = "block"; // Show error message
-                  document.getElementById("file").value = ""; // Clear the file input
-                } else {
-                  document.getElementById("error-message").style.display = "none"; // Hide error message
-                }
-              }
-            </script>
-
-
-
-
             <input type="submit" name="sent" value="Submit">
 
           </form>
@@ -330,39 +307,8 @@ if (isset($_POST['sent'])) {
       </div>
     </section>
 
+
     <script>
-      // Get the phone input element
-      var phone = document.getElementById("phone");
-      var form = document.getElementById("formId");
-      // Add an event listener for the "blur" event
-      phone.addEventListener("blur", function () {
-        // Get the phone number
-        var phoneNumber = phone.value;
-
-        // Regular expression to match 10 digits
-        var regex = /^\d{10}$/;
-
-        // Check if the phone number matches the regular expression
-        if (!regex.test(phoneNumber)) {
-          alert("Please enter a valid 10-digit phone number");
-          phone.value = "";
-        }
-      });
-
-      // Add an event listener for the "submit" event
-      form.addEventListener("submit", function (e) {
-        // Get the phone number
-        var phoneNumber = phone.value;
-
-        // Regular expression to match 10 digits
-        var regex = /^\d{10}$/;
-
-        // Check if the phone number matches the regular expression
-        if (!regex.test(phoneNumber)) {
-          alert("Please enter a valid 10-digit phone number");
-          e.preventDefault();
-        }
-      });
       let sidebar = document.querySelector(".sidebar");
       let sidebarBtn = document.querySelector(".sidebarBtn");
       sidebarBtn.onclick = function () {

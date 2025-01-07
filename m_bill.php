@@ -1,5 +1,5 @@
 <?php
-include("visitor_db.php");
+include("society_dbE.php");
 session_start();
 if (!isset($_SESSION['m_logged_in'])) {
     header("Location: index.html");
@@ -13,7 +13,7 @@ if (isset($_SESSION["m_flat"])) {
 } else {
     $flat = "9999";
 }
-$result = mysqli_query($con, "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='Approved' OR `flat_no`='{$flat}' AND `status`='Denied '");
+$result = mysqli_query($conn, "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='Approved' OR `flat_no`='{$flat}' AND `status`='Denied '");
 if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION['m_flat']) && isset($_SESSION['m_society'])) {
     $mname = $_SESSION['m_name'];
     $memail = $_SESSION['m_email'];
@@ -153,10 +153,9 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
         </nav>
 
         <div class="home-content">
-
             <div class="overview-boxes">
                 <div class="box">
-                    <a href="">
+                    <a href="javascript:void(0)" id="maintenance-btn">
                         <div class="right-side">
                             <div class="box-topic"></div>
                             <div class="number">Maintenance</div>
@@ -193,7 +192,40 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
             </div>
         </div>
 
+        <div id="popup"
+            style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); z-index: 1000; width: 300px; padding: 20px; text-align: center;">
+            <h2 style="margin-bottom: 20px;">Pay Maintenance</h2>
+            <form action="process_payment.php" method="POST">
+                <input type="text" name="amount" placeholder="Enter Amount"
+                    style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;"
+                    required>
+                <button type="submit"
+                    style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Pay</button>
+                <button type="button" id="close-btn"
+                    style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </form>
+        </div>
+        <div id="overlay"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;">
+        </div>
 
+        <script>
+            // JavaScript for Popup
+            document.getElementById('maintenance-btn').addEventListener('click', function () {
+                document.getElementById('popup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            });
+
+            document.getElementById('close-btn').addEventListener('click', function () {
+                document.getElementById('popup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            });
+
+            document.getElementById('overlay').addEventListener('click', function () {
+                document.getElementById('popup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            });
+        </script>
     </section>
     <script>
         let sidebar = document.querySelector(".sidebar");

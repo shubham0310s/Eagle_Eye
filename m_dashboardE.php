@@ -1,6 +1,6 @@
 <?php
 include("society_dbE.php");
-include("visitor_db.php");
+// include("visitor_db.php");
 session_start();
 if (!isset($_SESSION['m_logged_in'])) {
   header("Location: index.html");
@@ -27,7 +27,7 @@ $a = mysqli_query($conn, "SELECT * FROM `admin_table`");
 $admin = mysqli_num_rows($a);
 $w = mysqli_query($conn, "SELECT * FROM `watchman_table`");
 $watchman = mysqli_num_rows($w);
-$v = mysqli_query($con, "SELECT * FROM `visitor_table`");
+$v = mysqli_query($conn, "SELECT * FROM `visitor_table`");
 $visitor = mysqli_num_rows($v);
 
 ?><!DOCTYPE html>
