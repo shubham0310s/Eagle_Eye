@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         <form id="chat-form" style="display: flex; align-items: center; gap: 10px;">
                             <input type="text" id="chat-input" placeholder="Type your message..."
                                 style="flex: 1; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; outline: none; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); transition: border-color 0.3s;">
-                            <button type="submit" id="send-button" disabled
+                            <button type="submit" id="send-button"
                                 style="padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: not-allowed; opacity: 0.6; transition: background-color 0.3s; margin-bottom: 10px;">
                                 Send
                             </button>
@@ -332,49 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         }
                     });
                 </script>
-                <script>
-                    document.getElementById('chat-form').addEventListener('submit', function (e) {
-                        e.preventDefault();
-                        const messageInput = document.getElementById('chat-input');
-                        const message = messageInput.value.trim();
-                        const flatNo = '2222_A101'; // Replace with the selected user's flat number
-                        const societyReg = 1234; // Replace with the current society's reg number
-                        const senderRole = 'member'; // Or 'watchman' based on who sends the message
 
-                        if (message) {
-                            fetch('save_message.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    message: message,
-                                    sender_role: senderRole,
-                                    flat_no: flatNo,
-                                    society_reg: societyReg,
-                                }),
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.status === 'success') {
-                                        console.log('Message sent and saved successfully');
-                                    } else {
-                                        console.error('Failed to save message:', data.message);
-                                    }
-                                })
-                                .catch(error => console.error('Error:', error));
-
-                            // Append the message to the chat
-                            const chatMessages = document.getElementById('chat-messages');
-                            const newMessage = document.createElement('p');
-                            newMessage.textContent = message;
-                            newMessage.style = "padding: 10px; background-color: #d9f7d9; border-radius: 5px; margin-bottom: 5px;";
-                            chatMessages.appendChild(newMessage);
-                            messageInput.value = '';
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                        }
-                    });
-                </script>
             </div>
         </div>
 
