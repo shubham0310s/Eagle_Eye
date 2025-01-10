@@ -14,7 +14,6 @@ if (isset($_POST['logg'])) {	//setting credential
 		$query = mysqli_query($conn, "SELECT * FROM `admin_table` WHERE `a_email`='{$email}' AND `ad_password` = '{$passwd}'");
 		if (mysqli_num_rows($query) == 1) {
 			while ($row = mysqli_fetch_array($query)) {
-				$_SESSION["a_id"] = $row["admin_id"];
 				$_SESSION["a_name"] = $row["a_name"];
 				$_SESSION["a_society"] = $row["society_reg"];
 				$_SESSION["a_email"] = $row["a_email"];
@@ -39,7 +38,7 @@ if (isset($_POST['logg'])) {	//setting credential
 				$_SESSION["m_flat"] = $row["flat_no"];
 				$_SESSION["m_society"] = $row["society_reg"];
 				$_SESSION['m_logged_in'] = true;
-				$_SESSION['m_ role'] = $role;
+				$_SESSION['m_role'] = $role;
 
 				// Redirect to the home page
 				header('location: m_dashboardE.php');
@@ -60,7 +59,7 @@ if (isset($_POST['logg'])) {	//setting credential
 				$_SESSION["w_email"] = $row["w_email"];
 				$_SESSION['w_society'] = $row["society_reg"];
 				$_SESSION['w_logged_in'] = true;
-				$_SESSION['W_role'] = $role;
+				$_SESSION['w_role'] = $role;
 
 
 				// Redirect to the home page

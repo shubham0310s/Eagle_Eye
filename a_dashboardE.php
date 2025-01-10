@@ -1,56 +1,63 @@
 <?php
-// Start the session
-session_start();
+// Start the session with secure options
+session_start([
+  'cookie_lifetime' => 1800, // 30 minutes session
+  'cookie_secure' => true,   // Ensures the cookie is sent over HTTPS
+  'cookie_httponly' => true, // Prevents JavaScript access to session cookie
+  'cookie_samesite' => 'Strict' // Prevents cross-site request forgery
+]);
 
 // Include the database connection
 include("society_dbE.php");
 
-// Check if the user is logged in as an admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-  // Redirect to login page if not logged in
-  header("Location: loginE.php");
-  exit;
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $email = $_POST['email'];
+  $password = $_POST['password'];
 
-// Check if required cookies are set
-if (isset($_COOKIE['a_email']) && isset($_COOKIE['user_role']) && isset($_COOKIE['logged_in']) && isset($_COOKIE['a_name'])) {
-  // Assign session variables from cookies
-  $_SESSION['a_email'] = $_COOKIE['a_email'];
-  $_SESSION['a_name'] = $_COOKIE['a_name'];
-  $_SESSION['user_role'] = $_COOKIE['user_role'];
-  $_SESSION['logged_in'] = $_COOKIE['logged_in'];
+  // Query to validate the admin user
+  $query = "SELECT * FROM `admin_table` WHERE `email` = ? AND `password` = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("ss", $email, $password);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
-  // Restrict access for non-admin users or unauthenticated users
-  if ($_SESSION['user_role'] !== 'admin' || $_SESSION['logged_in'] !== '1') {
-    // Redirect non-admins or unauthenticated users to the login page
-    header("Location: loginE.php");
-    exit();
+  if ($result->num_rows > 0) {
+    // Login successful
+    $admin = $result->fetch_assoc();
+
+    // Set session variables
+    $_SESSION['a_logged_in'] = true;
+    $_SESSION['a_email'] = $admin['email'];
+    $_SESSION['a_name'] = $admin['name'];
+    $_SESSION['a_role'] = 'admin';
+
+    // Set cookies
+    setcookie('a_email', $admin['email'], time() + 1800, '/', '', false, true);
+    setcookie('role', 'admin', time() + 1800, '/', '', false, true);
+    setcookie('logged_in', '1', time() + 1800, '/', '', false, true);
+    setcookie('a_name', $admin['name'], time() + 1800, '/', '', false, true);
+
+    // Redirect to dashboard
+    header("Location: a_dashboardE.php");
+    exit;
+  } else {
+    // Login failed
+    echo "Invalid email or password.";
   }
+
 }
 
-// Session timeout logic
-$timeout = 1800; // 30 minutes timeout
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
-  // Destroy the session if timed out
-  session_unset();
-  session_destroy();
-  header("Location: index.html");
-  exit;
-}
-
-// Update the last activity timestamp
-$_SESSION['last_activity'] = time();
 
 // Assign session variables
 $society = isset($_SESSION["a_society"]) ? $_SESSION["a_society"] : "";
 $aname = isset($_SESSION['a_name']) ? $_SESSION['a_name'] : "Name";
 $aemail = isset($_SESSION['a_email']) ? $_SESSION['a_email'] : "Email@gmail.com";
 
-// Fetch data from the database
-$mresult = $society ? mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'") : false;
-$wresult = $society ? mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}'") : false;
-?>
+// Fetch data from the database with error handling
+$mresult = mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'");
+$wresult = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}'");
 
+?>
 
 
 <!DOCTYPE html>
@@ -216,7 +223,6 @@ $wresult = $society ? mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE 
         <div class="box">
           <div class="right-side">
             <div class="box-topic">Total Member</div>
-
 
             <?php
 
