@@ -1,25 +1,31 @@
 <?php
-// Set secure session parameters before starting the session
-session_set_cookie_params([
-  'lifetime' => 0,
-  'path' => '/',
-  'domain' => 'localhost', // Update to your actual domain
-  'secure' => false,        // Set to true if using HTTPS
-  'httponly' => true,
-  'samesite' => 'Strict'
-]);
-
 // Start the session
 session_start();
 
 // Include the database connection
 include("society_dbE.php");
 
-// Check if the user is logged in
-if (!isset($_SESSION['a_logged_in']) || $_SESSION['a_logged_in'] !== true) {
+// Check if the user is logged in as an admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
   // Redirect to login page if not logged in
-  header("Location: index.html");
+  header("Location: loginE.php");
   exit;
+}
+
+// Check if required cookies are set
+if (isset($_COOKIE['a_email']) && isset($_COOKIE['user_role']) && isset($_COOKIE['logged_in']) && isset($_COOKIE['a_name'])) {
+  // Assign session variables from cookies
+  $_SESSION['a_email'] = $_COOKIE['a_email'];
+  $_SESSION['a_name'] = $_COOKIE['a_name'];
+  $_SESSION['user_role'] = $_COOKIE['user_role'];
+  $_SESSION['logged_in'] = $_COOKIE['logged_in'];
+
+  // Restrict access for non-admin users or unauthenticated users
+  if ($_SESSION['user_role'] !== 'admin' || $_SESSION['logged_in'] !== '1') {
+    // Redirect non-admins or unauthenticated users to the login page
+    header("Location: loginE.php");
+    exit();
+  }
 }
 
 // Session timeout logic
@@ -44,6 +50,7 @@ $aemail = isset($_SESSION['a_email']) ? $_SESSION['a_email'] : "Email@gmail.com"
 $mresult = $society ? mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'") : false;
 $wresult = $society ? mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_reg`='{$society}'") : false;
 ?>
+
 
 
 <!DOCTYPE html>

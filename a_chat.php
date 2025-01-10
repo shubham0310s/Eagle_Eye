@@ -20,6 +20,15 @@ if (!isset($_SESSION['a_society']) || empty($_SESSION['a_society'])) {
     echo "Please log in first.";
     exit;
 }
+if (isset($_SESSION['logged'])) {
+    if ($_SESSION['logged'] == true) {
+        header('Location:index.html');
+        exit;
+    } else {
+        header('Location:loginE.php');
+        exit;
+    }
+}
 
 // Fetch the society from the session
 $society = $_SESSION['a_society'];
@@ -222,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         <form id="chat-form" style="display: flex; align-items: center; gap: 10px;">
                             <input type="text" id="chat-input" placeholder="Type your message..."
                                 style="flex: 1; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; outline: none; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); transition: border-color 0.3s;">
-                            <button type="submit" id="send-button"
+                            <button type="submit" id="send-button" disabled
                                 style="padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: not-allowed; opacity: 0.6; transition: background-color 0.3s; margin-bottom: 10px;">
                                 Send
                             </button>
@@ -315,23 +324,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         document.getElementById('send-button').disabled = false;
                     }
 
+
+
                     // Chat Form Submission
                     document.getElementById('chat-form').addEventListener('submit', function (e) {
                         e.preventDefault();
                         const messageInput = document.getElementById('chat-input');
                         const message = messageInput.value.trim();
                         if (message) {
+                            // Get current time
+                            const currentTime = new Date();
+                            const hours = String(currentTime.getHours()).padStart(2, '0');
+                            const minutes = String(currentTime.getMinutes()).padStart(2, '0');
+                            const timestamp = `${hours}:${minutes}`;
+
                             // Add message to chat history (local simulation)
                             const chatMessages = document.getElementById('chat-messages');
-                            const newMessage = document.createElement('p');
-                            newMessage.textContent = message;
-                            newMessage.style = "padding: 10px; background-color: #d9f7d9; border-radius: 5px; margin-bottom: 5px;";
+                            const newMessage = document.createElement('div');
+                            newMessage.setAttribute('style', 'display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 10px;');
+
+                            newMessage.innerHTML = `<div style="padding: 10px; background-color: #d9f7d9; border-radius: 5px; max-width: 70%; text-align: left;"> ${message}
+                    </div>
+                    <span style="font-size: 0.8em; color: #888; margin-top: 2px;">${timestamp}</span>`;
                             chatMessages.appendChild(newMessage);
+
+                            // Clear input and scroll to bottom
                             messageInput.value = '';
                             chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                            // Simulate receiving a message (for demonstration)
+                            setTimeout(() => {
+                                const receivedMessage = document.createElement('div');
+                                receivedMessage.setAttribute('style', 'display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 10px;');
+                                receivedMessage.innerHTML = `
+                        <div style="padding: 10px; background-color: #e8e8e8; border-radius: 5px; max-width: 70%; text-align: left;">
+                            This is a received message.
+                        </div>
+                        <span style="font-size: 0.8em; color: #888; margin-top: 2px;">${timestamp}</span>
+                    `;
+                                chatMessages.appendChild(receivedMessage);
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                            }, 1000);
                         }
                     });
                 </script>
+
+
 
             </div>
         </div>

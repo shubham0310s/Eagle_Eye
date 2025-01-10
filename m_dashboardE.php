@@ -1,11 +1,38 @@
 <?php
-include("society_dbE.php");
-// include("visitor_db.php");
 session_start();
-if (!isset($_SESSION['m_logged_in'])) {
-  header("Location: index.html");
-  exit;
+include("society_dbE.php");
+
+// Check if the user is logged in as an admin
+if (isset($_SESSION['a_logged_in']) && $_SESSION['a_logged_in']) {
+  // If the user is logged in as an admin, restrict access to other modules
+  if (isset($_SESSION['m_logged_in']) || isset($_SESSION['w_logged_in'])) {
+    // Destroy other session variables to prevent access to other modules
+    unset($_SESSION['m_logged_in']);
+    unset($_SESSION['w_logged_in']);
+    unset($_SESSION['m_email']);
+    unset($_SESSION['m_name']);
+    unset($_SESSION['m_society']);
+    unset($_SESSION['w_email']);
+    unset($_SESSION['w_name']);
+    unset($_SESSION['w_society']);
+  }
 }
+
+// Check if cookies are set for logged-in members
+if (isset($_COOKIE['m_email']) && isset($_COOKIE['m_name']) && isset($_COOKIE['m_society']) && isset($_COOKIE['m_logged_in'])) {
+  // Assign session variables from cookies
+  $_SESSION['m_email'] = $_COOKIE['m_email'];
+  $_SESSION['m_name'] = $_COOKIE['m_name'];
+  $_SESSION['m_society'] = $_COOKIE['m_society'];
+  $_SESSION['m_logged_in'] = $_COOKIE['m_logged_in'];
+
+  // Restrict access if the member is not logged in
+  if (!$_SESSION['m_logged_in']) {
+    header("Location: index.html");
+    exit();
+  }
+}
+
 if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION['m_flat']) && isset($_SESSION['m_society'])) {
   $mname = $_SESSION['m_name'];
   $memail = $_SESSION['m_email'];
@@ -18,7 +45,6 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
   $memail = "Email@gmail.com";
   $msociety = "0000";
   $mflat = "A000";
-
 }
 
 $m = mysqli_query($conn, "SELECT * FROM `member_table`");
@@ -29,8 +55,8 @@ $w = mysqli_query($conn, "SELECT * FROM `watchman_table`");
 $watchman = mysqli_num_rows($w);
 $v = mysqli_query($conn, "SELECT * FROM `visitor_table`");
 $visitor = mysqli_num_rows($v);
-
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 
 <html lang="en" dir="ltr">
 
