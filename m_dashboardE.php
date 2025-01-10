@@ -3,11 +3,19 @@ session_start();
 include("society_dbE.php");
 
 // Check if the user is logged in as an admin
-// Check if the user is already logged in
-if (isset($_SESSION['m_logged_in']) && $_SESSION['m_logged_in']) {
-  // Redirect to the member dashboard if already logged in
-  header("Location: m_dashboardE.php");
-  exit();
+if (isset($_SESSION['a_logged_in']) && $_SESSION['a_logged_in']) {
+  // If the user is logged in as an admin, restrict access to other modules
+  if (isset($_SESSION['m_logged_in']) || isset($_SESSION['w_logged_in'])) {
+    // Destroy other session variables to prevent access to other modules
+    unset($_SESSION['m_logged_in']);
+    unset($_SESSION['w_logged_in']);
+    unset($_SESSION['m_email']);
+    unset($_SESSION['m_name']);
+    unset($_SESSION['m_society']);
+    unset($_SESSION['w_email']);
+    unset($_SESSION['w_name']);
+    unset($_SESSION['w_society']);
+  }
 }
 
 // Check if cookies are set for logged-in members
@@ -18,10 +26,27 @@ if (isset($_COOKIE['m_email']) && isset($_COOKIE['m_name']) && isset($_COOKIE['m
   $_SESSION['m_society'] = $_COOKIE['m_society'];
   $_SESSION['m_logged_in'] = $_COOKIE['m_logged_in'];
 
-  // Redirect to the member dashboard if logged in via cookies
-  header("Location: m_dashboardE.php");
-  exit();
+  // Restrict access if the member is not logged in
+  if (!$_SESSION['m_logged_in']) {
+    header("Location: index.html");
+    exit();
+  }
 }
+
+if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION['m_flat']) && isset($_SESSION['m_society'])) {
+  $mname = $_SESSION['m_name'];
+  $memail = $_SESSION['m_email'];
+  $msociety = $_SESSION['m_society'];
+  $mflat_no = $_SESSION['m_flat'];
+  $find = $msociety . "_";
+  $mflat = str_replace($find, "", $mflat_no);
+} else {
+  $mname = "name";
+  $memail = "Email@gmail.com";
+  $msociety = "0000";
+  $mflat = "A000";
+}
+
 $m = mysqli_query($conn, "SELECT * FROM `member_table`");
 $member = mysqli_num_rows($m);
 $a = mysqli_query($conn, "SELECT * FROM `admin_table`");

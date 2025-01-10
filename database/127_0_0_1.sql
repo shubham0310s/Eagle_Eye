@@ -115,42 +115,15 @@ VALUES
 -- --------------------------------------------------------
 -- Table structure for `payments`
 -- --------------------------------------------------------
-CREATE TABLE `payments` (
-  `payment_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `society_reg` INT(4) NOT NULL,
-  `flat_no` VARCHAR(9) NOT NULL,
-  `amount` DECIMAL(10, 2) NOT NULL,
-  `payment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `status` VARCHAR(20) DEFAULT 'Pending',
-  CONSTRAINT `fk_flat_no` FOREIGN KEY (`flat_no`) REFERENCES `member_table`(`flat_no`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_society_reg` FOREIGN KEY (`society_reg`) REFERENCES `member_table`(`society_reg`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- --------------------------------------------------------
--- Table structure for `messages_table`
--- --------------------------------------------------------
-CREATE TABLE `messages_table` (
-  `message_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `message` TEXT NOT NULL,
-  `sender_role` ENUM('admin', 'member', 'watchman') NOT NULL, -- Role of the sender
-  `sender_id` INT NOT NULL, -- ID of the sender (from relevant table)
-  `receiver_role` ENUM('admin', 'member', 'watchman') NOT NULL, -- Role of the receiver
-  `receiver_id` INT NOT NULL, -- ID of the receiver (from relevant table)
-  `society_reg` INT NOT NULL, -- Society Registration number
-  `flat_no` VARCHAR(9) NOT NULL, -- Flat number (for member-related messages)
-  `message_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date and time of message
-  FOREIGN KEY (`society_reg`) REFERENCES `admin_table`(`society_reg`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`flat_no`) REFERENCES `member_table`(`flat_no`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
--- Insert sample data into `messages_table`
--- --------------------------------------------------------
-INSERT INTO `messages_table` 
-(`message`, `sender_role`, `sender_id`, `receiver_role`, `receiver_id`, `society_reg`, `flat_no`) 
-VALUES
-('Hello, I have a question about the upcoming meeting.', 'member', 1, 'admin', 2, 1234, '2222_A101'),
-('The gate will be closed for maintenance tomorrow. Please be aware.', 'watchman', 1, 'member', 3, 1234, NULL);
+-- CREATE TABLE `payments` (
+--   `payment_id` INT AUTO_INCREMENT PRIMARY KEY,
+--   `society_reg` INT(4) NOT NULL,
+--   `flat_no` VARCHAR(9) NOT NULL,
+--   `amount` DECIMAL(10, 2) NOT NULL,
+--   `payment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   `status` VARCHAR(20) DEFAULT 'Pending',
+--   CONSTRAINT `fk_flat_no` FOREIGN KEY (`flat_no`) REFERENCES `member_table`(`flat_no`) ON DELETE CASCADE ON UPDATE CASCADE,
+--   CONSTRAINT `fk_society_reg` FOREIGN KEY (`society_reg`) REFERENCES `member_table`(`society_reg`) ON DELETE CASCADE ON UPDATE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 COMMIT;

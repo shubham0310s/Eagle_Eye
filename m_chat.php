@@ -1,30 +1,50 @@
 <?php
-include("society_dbE.php");
 session_start();
-if (!isset($_SESSION['m_logged_in'])) {
-    header("Location: index.html");
-    exit;
-}
-if (isset($_SESSION["m_flat"])) {
-    $society = $_SESSION["m_society"];
-    $find = $society . "_";
-    $flat = str_replace($find, "", $_SESSION["m_flat"]);
+include("society_dbE.php");
 
-} else {
-    $flat = "9999";
+// Check if the user is logged in as an admin
+if (isset($_SESSION['a_logged_in']) && $_SESSION['a_logged_in']) {
+    // If the user is logged in as an admin, restrict access to other modules
+    if (isset($_SESSION['m_logged_in']) || isset($_SESSION['w_logged_in'])) {
+        // Destroy other session variables to prevent access to other modules
+        unset($_SESSION['m_logged_in']);
+        unset($_SESSION['w_logged_in']);
+        unset($_SESSION['m_email']);
+        unset($_SESSION['m_name']);
+        unset($_SESSION['m_society']);
+        unset($_SESSION['w_email']);
+        unset($_SESSION['w_name']);
+        unset($_SESSION['w_society']);
+    }
 }
-$result = mysqli_query($conn, "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='Approved' OR `flat_no`='{$flat}' AND `status`='Denied '");
+
+// Check if cookies are set for logged-in members
+if (isset($_COOKIE['m_email']) && isset($_COOKIE['m_name']) && isset($_COOKIE['m_society']) && isset($_COOKIE['m_logged_in'])) {
+    // Assign session variables from cookies
+    $_SESSION['m_email'] = $_COOKIE['m_email'];
+    $_SESSION['m_name'] = $_COOKIE['m_name'];
+    $_SESSION['m_society'] = $_COOKIE['m_society'];
+    $_SESSION['m_logged_in'] = $_COOKIE['m_logged_in'];
+
+    // Restrict access if the member is not logged in
+    if (!$_SESSION['m_logged_in']) {
+        header("Location: index.html");
+        exit();
+    }
+}
+
 if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION['m_flat']) && isset($_SESSION['m_society'])) {
     $mname = $_SESSION['m_name'];
     $memail = $_SESSION['m_email'];
     $msociety = $_SESSION['m_society'];
-    $mflat = $flat;
+    $mflat_no = $_SESSION['m_flat'];
+    $find = $msociety . "_";
+    $mflat = str_replace($find, "", $mflat_no);
 } else {
     $mname = "name";
     $memail = "Email@gmail.com";
     $msociety = "0000";
     $mflat = "A000";
-
 }
 ?>
 
@@ -190,7 +210,23 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                     </div>
 
                 </div>
+                <style>
+                    .message-sent {
+                        text-align: right;
+                        margin: 5px;
+                        background-color: #d9f7d9;
+                        padding: 10px;
+                        border-radius: 5px;
+                    }
 
+                    .message-received {
+                        text-align: left;
+                        margin: 5px;
+                        background-color: #e8e8e8;
+                        padding: 10px;
+                        border-radius: 5px;
+                    }
+                </style>
                 <script>
                     // Fetch Members from Database
                     fetch('fetch_members.php')
@@ -276,65 +312,57 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                     }
 
                     // Chat Form Submission
-                    document.getElementById('chat-form').addEventListener('submit', function (e) {
+                    const ws = new WebSocket('ws://localhost:8080/chat');
+
+                    ws.onopen = () => {
+                        console.log('WebSocket connected');
+                    };
+
+                    ws.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        displayMessage(data.message, data.sender, data.timestamp, 'received');
+                    };
+
+                    ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                    };
+
+                    ws.onclose = () => {
+                        console.log('WebSocket closed');
+                    };
+
+                    // Sending messages
+                    document.getElementById('chat-form').addEventListener('submit', (e) => {
                         e.preventDefault();
                         const messageInput = document.getElementById('chat-input');
                         const message = messageInput.value.trim();
-                        if (message) {
-                            // Add message to chat history (local simulation)
-                            const chatMessages = document.getElementById('chat-messages');
-                            const newMessage = document.createElement('p');
-                            newMessage.textContent = message;
-                            newMessage.style = "padding: 10px; background-color: #d9f7d9; border-radius: 5px; margin-bottom: 5px;";
-                            chatMessages.appendChild(newMessage);
-                            messageInput.value = '';
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                        }
-                    });
-                </script>
-                <script>
-                    document.getElementById('chat-form').addEventListener('submit', function (e) {
-                        e.preventDefault();
-                        const messageInput = document.getElementById('chat-input');
-                        const message = messageInput.value.trim();
-                        const flatNo = '2222_A101'; // Replace with the selected user's flat number
-                        const societyReg = 1234; // Replace with the current society's reg number
-                        const senderRole = 'member'; // Or 'watchman' based on who sends the message
 
                         if (message) {
-                            fetch('save_message.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    message: message,
-                                    sender_role: senderRole,
-                                    flat_no: flatNo,
-                                    society_reg: societyReg,
-                                }),
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.status === 'success') {
-                                        console.log('Message sent and saved successfully');
-                                    } else {
-                                        console.error('Failed to save message:', data.message);
-                                    }
-                                })
-                                .catch(error => console.error('Error:', error));
-
-                            // Append the message to the chat
-                            const chatMessages = document.getElementById('chat-messages');
-                            const newMessage = document.createElement('p');
-                            newMessage.textContent = message;
-                            newMessage.style = "padding: 10px; background-color: #d9f7d9; border-radius: 5px; margin-bottom: 5px;";
-                            chatMessages.appendChild(newMessage);
+                            const data = {
+                                message,
+                                sender: 'Admin', // Change based on the user role
+                                timestamp: new Date()
+                            };
+                            ws.send(JSON.stringify(data));
+                            displayMessage(message, 'You', new Date().toLocaleTimeString(), 'sent');
                             messageInput.value = '';
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
                         }
                     });
+
+                    function displayMessage(message, sender, timestamp, type) {
+                        const chatMessages = document.getElementById('chat-messages');
+                        const newMessage = document.createElement('div');
+                        newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
+
+                        newMessage.innerHTML = `
+        <strong>${sender}</strong> (${timestamp}): <br>${message}
+    `;
+                        chatMessages.appendChild(newMessage);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+
                 </script>
+
             </div>
         </div>
     </section>

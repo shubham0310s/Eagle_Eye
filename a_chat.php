@@ -239,7 +239,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                     </div>
 
                 </div>
+                <style>
+                    .message-sent {
+                        text-align: right;
+                        margin: 5px;
+                        background-color: #d9f7d9;
+                        padding: 10px;
+                        border-radius: 5px;
+                    }
 
+                    .message-received {
+                        text-align: left;
+                        margin: 5px;
+                        background-color: #e8e8e8;
+                        padding: 10px;
+                        border-radius: 5px;
+                    }
+                </style>
                 <script>
                     // Fetch Members from Database
                     fetch('fetch_members.php')
@@ -324,52 +340,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         document.getElementById('send-button').disabled = false;
                     }
 
-
-
                     // Chat Form Submission
-                    document.getElementById('chat-form').addEventListener('submit', function (e) {
+                    const ws = new WebSocket('ws://localhost:8080/chat');
+
+                    ws.onopen = () => {
+                        console.log('WebSocket connected');
+                    };
+
+                    ws.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        displayMessage(data.message, data.sender, data.timestamp, 'received');
+                    };
+
+                    ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                    };
+
+                    ws.onclose = () => {
+                        console.log('WebSocket closed');
+                    };
+
+                    // Sending messages
+                    document.getElementById('chat-form').addEventListener('submit', (e) => {
                         e.preventDefault();
                         const messageInput = document.getElementById('chat-input');
                         const message = messageInput.value.trim();
+
                         if (message) {
-                            // Get current time
-                            const currentTime = new Date();
-                            const hours = String(currentTime.getHours()).padStart(2, '0');
-                            const minutes = String(currentTime.getMinutes()).padStart(2, '0');
-                            const timestamp = `${hours}:${minutes}`;
-
-                            // Add message to chat history (local simulation)
-                            const chatMessages = document.getElementById('chat-messages');
-                            const newMessage = document.createElement('div');
-                            newMessage.setAttribute('style', 'display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 10px;');
-
-                            newMessage.innerHTML = `<div style="padding: 10px; background-color: #d9f7d9; border-radius: 5px; max-width: 70%; text-align: left;"> ${message}
-                    </div>
-                    <span style="font-size: 0.8em; color: #888; margin-top: 2px;">${timestamp}</span>`;
-                            chatMessages.appendChild(newMessage);
-
-                            // Clear input and scroll to bottom
+                            const data = {
+                                message,
+                                sender: 'Admin', // Change based on the user role
+                                timestamp: new Date()
+                            };
+                            ws.send(JSON.stringify(data));
+                            displayMessage(message, 'You', new Date(), 'sent');
                             messageInput.value = '';
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                            // Simulate receiving a message (for demonstration)
-                            setTimeout(() => {
-                                const receivedMessage = document.createElement('div');
-                                receivedMessage.setAttribute('style', 'display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 10px;');
-                                receivedMessage.innerHTML = `
-                        <div style="padding: 10px; background-color: #e8e8e8; border-radius: 5px; max-width: 70%; text-align: left;">
-                            This is a received message.
-                        </div>
-                        <span style="font-size: 0.8em; color: #888; margin-top: 2px;">${timestamp}</span>
-                    `;
-                                chatMessages.appendChild(receivedMessage);
-                                chatMessages.scrollTop = chatMessages.scrollHeight;
-                            }, 1000);
                         }
                     });
+
+                    function displayMessage(message, sender, timestamp, type) {
+                        const chatMessages = document.getElementById('chat-messages');
+                        const newMessage = document.createElement('div');
+                        newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
+
+                        newMessage.innerHTML = `
+        <strong>${sender}</strong> (${timestamp}): <br>${message}
+    `;
+                        chatMessages.appendChild(newMessage);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+
                 </script>
-
-
 
             </div>
         </div>
