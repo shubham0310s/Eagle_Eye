@@ -360,7 +360,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                         chatMessages.appendChild(newMessage);
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }
-
+                    console.log("Hello");
                 </script>
 
             </div>
