@@ -1,13 +1,4 @@
 <?php
-// Set secure session parameters before starting the session
-session_set_cookie_params([
-  'lifetime' => 0,
-  'path' => '/',
-  'domain' => 'localhost', // Replace with your actual domain
-  'secure' => false,       // Set to true if using HTTPS
-  'httponly' => true,
-  'samesite' => 'Strict'
-]);
 
 // Start the session
 session_start();
@@ -24,6 +15,7 @@ if (!isset($_SESSION['a_logged_in']) || $_SESSION['a_logged_in'] !== true) {
 // Assign session variables with fallback values
 $aname = isset($_SESSION['a_name']) ? $_SESSION['a_name'] : "Name";
 $aemail = isset($_SESSION['a_email']) ? $_SESSION['a_email'] : "Email@gmail.com";
+$society = isset($_SESSION['a_society']) ? $_SESSION['a_society'] : "0000";
 
 // Optional: Log user session details for debugging (can be removed in production)
 error_log("Session started for: $aname ($aemail)");
@@ -62,25 +54,25 @@ error_log("Session started for: $aname ($aemail)");
       <li>
         <a href="a_event.php">
           <i class='bx bx-calendar'></i>
-          <span class="links_name"> Event</span>
+          <span class="links_name"> EVENT</span>
         </a>
       </li>
       <li>
         <a href="a_chat.php">
           <i class='bx bx-chat'></i>
-          <span class="links_name">Chat</span>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
         <a href="" class="active">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member Report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
       <li>
         <a href="a_reportw.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Watchman Report</span>
+          <span class="links_name">WATCHMAN REPORT</span>
         </a>
       </li>
       <li>
@@ -92,7 +84,7 @@ error_log("Session started for: $aname ($aemail)");
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name">LOG OUT</span>
         </a>
       </li>
     </ul>
@@ -103,27 +95,17 @@ error_log("Session started for: $aname ($aemail)");
         <i class='bx bx-menu sidebarBtn'></i>
         <span class="dashboard">REPORT</span>
       </div>
+      <!-- This start of account info function -->
 
-      <div class="search-box">
-        <br />
-        <br />
-        <br />
-        <div class="form-group">
-          <div class="input-group">
-            <div class="search-box">
-              <input type="text" id="search_text" placeholder="Search..." style="color:black">
-            </div>
-          </div>
-        </div>
-        <br />
-        <div id="result"></div>
-      </div>
-      <div style="clear:both"></div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <!-- This is the start of account info function -->
+      <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/style.css">
+        <link
+          href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+          rel="stylesheet">
+      </head>
       <div class="action">
         <div class="profile" onclick="menuToggle();">
           <img src="images/host.png" alt="">
@@ -132,26 +114,52 @@ error_log("Session started for: $aname ($aemail)");
         <div class="menu">
           <h3>
             <?php
-            echo "<div id='eagleN'><b>" . $aname . "</b></div>";
-            echo "<div id='eagleR'> Admin </div>";
-            echo "<div id='eagleG'>" . $aemail . "</div>";
+            echo "<div id = 'eagleN'><b>" . $aname . "</b></div>";
+            echo "<div id = 'eagleR'> Admin </div>";
+            echo "<div id = 'eagleG'>" . $aemail . "</div>";
+            echo "<div id = 'eagleG'>" . $society . "</div>";
             ?>
           </h3>
           <ul>
             <li>
               <span class="material-icons icons-size">mode</span>
-              <a href="change_passE.php">Update Password</a>
+              <a href="change_passE.php">Change Password</a>
             </li>
           </ul>
         </div>
       </div>
+
       <script>
         function menuToggle() {
           const toggleMenu = document.querySelector('.menu');
-          toggleMenu.classList.toggle('active');
+          toggleMenu.classList.toggle('active')
         }
       </script>
+
+      <!-- This end of account info function -->
+
     </nav>
+
+    <div class="search-box" style="max-width: 600px; margin: 0 auto; text-align: center;">
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <div class="form-group" style="margin-bottom: 20px;">
+        <div class="input-group" style="display: flex; justify-content: center;">
+          <div class="search-box" style="width: 100%; max-width: 400px;">
+            <input type="text" id="search_text" placeholder="Search..."
+              style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); color: black;">
+          </div>
+        </div>
+      </div>
+      <br />
+      <div id="result" style="text-align: left; font-size: 14px; color: #333;"></div>
+    </div>
+    <div style="clear: both;"></div>
+
+
   </section>
 
   <script>

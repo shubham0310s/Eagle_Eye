@@ -10,48 +10,20 @@ session_start([
 // Include the database connection
 include("society_dbE.php");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-
-  // Query to validate the admin user
-  $query = "SELECT * FROM `admin_table` WHERE `email` = ? AND `password` = ?";
-  $stmt = $conn->prepare($query);
-  $stmt->bind_param("ss", $email, $password);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if ($result->num_rows > 0) {
-    // Login successful
-    $admin = $result->fetch_assoc();
-
-    // Set session variables
-    $_SESSION['a_logged_in'] = true;
-    $_SESSION['a_email'] = $admin['email'];
-    $_SESSION['a_name'] = $admin['name'];
-    $_SESSION['a_role'] = 'admin';
-
-    // Set cookies
-    setcookie('a_email', $admin['email'], time() + 1800, '/', '', false, true);
-    setcookie('role', 'admin', time() + 1800, '/', '', false, true);
-    setcookie('logged_in', '1', time() + 1800, '/', '', false, true);
-    setcookie('a_name', $admin['name'], time() + 1800, '/', '', false, true);
-
-    // Redirect to dashboard
-    header("Location: a_dashboardE.php");
-    exit;
-  } else {
-    // Login failed
-    echo "Invalid email or password.";
-  }
+if (!isset($_SESSION['a_logged_in'])) {
+  header("Location: index.html");
+  exit;
+}
+if (isset($_SESSION['a_name']) && isset($_SESSION['a_email']) && isset($_SESSION['a_society'])) {
+  $aname = $_SESSION['a_name'];
+  $aemail = $_SESSION['a_email'];
+  $society = $_SESSION['a_society'];
+} else {
+  $aname = "name";
+  $aemail = "Email@gmail.com";
+  $society = "0000";
 
 }
-
-
-// Assign session variables
-$society = isset($_SESSION["a_society"]) ? $_SESSION["a_society"] : "";
-$aname = isset($_SESSION['a_name']) ? $_SESSION['a_name'] : "Name";
-$aemail = isset($_SESSION['a_email']) ? $_SESSION['a_email'] : "Email@gmail.com";
 
 // Fetch data from the database with error handling
 $mresult = mysqli_query($conn, "SELECT * FROM `member_table` WHERE `society_reg`='{$society}'");
@@ -95,26 +67,26 @@ $wresult = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_re
       <li>
         <a href="a_event.php">
           <i class='bx bx-calendar'></i>
-          <span class="links_name">Event</span>
+          <span class="links_name">EVENT</span>
         </a>
       </li>
       <li>
         <a href="a_chat.php">
           <i class='bx bx-chat'></i>
-          <span class="links_name">Chat</span>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
 
       <li>
         <a href="a_reportm.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member Report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
       <li>
         <a href="a_reportw.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Watchman Report</span>
+          <span class="links_name">WATCHMAN REPORT</span>
         </a>
       </li>
       <li>
@@ -126,7 +98,7 @@ $wresult = mysqli_query($conn, "SELECT * FROM `watchman_table` WHERE `society_re
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name"> LOG OUT </span>
         </a>
       </li>
     </ul>

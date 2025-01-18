@@ -1,45 +1,24 @@
 <?php
-// Set secure session parameters before starting the session
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => 'localhost', // Replace with your actual domain
-    'secure' => false,       // Set to true if using HTTPS
-    'httponly' => true,
-    'samesite' => 'Strict'
-]);
-
 // Start the session
 session_start();
 
 // Include the database connection
 include("society_dbE.php");
 
-// Check if the user is logged in
-if (!isset($_SESSION['a_logged_in']) || $_SESSION['a_logged_in'] !== true) {
-    // Redirect to login page if not logged in
+if (!isset($_SESSION['a_logged_in'])) {
     header("Location: index.html");
     exit;
 }
+if (isset($_SESSION['a_name']) && isset($_SESSION['a_email']) && isset($_SESSION['a_society'])) {
+    $aname = $_SESSION['a_name'];
+    $aemail = $_SESSION['a_email'];
+    $society = $_SESSION['a_society'];
+} else {
+    $aname = "name";
+    $aemail = "Email@gmail.com";
+    $society = "0000";
 
-// Session timeout logic
-$timeout = 1800; // 30 minutes timeout
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
-    // Destroy the session if timed out
-    session_unset();
-    session_destroy();
-    header("Location: index.html?error=session_timeout");
-    exit;
 }
-
-// Update the last activity timestamp
-$_SESSION['last_activity'] = time();
-
-// Assign session variables
-$society = isset($_SESSION["a_society"]) ? $_SESSION["a_society"] : "0000";
-$aname = $_SESSION['a_name'] ?? "Name";
-$aemail = $_SESSION['a_email'] ?? "Email@gmail.com";
-
 // Initialize success message
 $successMessage = "";
 
@@ -51,8 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_event"])) {
 
     // Validate input fields
     if (!empty($eventTitle) && !empty($eventStart) && !empty($eventEnd)) {
-        $query = "INSERT INTO events (event_title, event_start, event_end, society_reg) 
-                  VALUES ('$eventTitle', '$eventStart', '$eventEnd', '$society')";
+        $query = "INSERT INTO events (event_title, event_start, event_end, society_reg)
+VALUES ('$eventTitle', '$eventStart', '$eventEnd', '$society')";
 
         if (mysqli_query($conn, $query)) {
             $_SESSION["event_success"] = "Event added successfully!";
@@ -117,25 +96,25 @@ $result = mysqli_query($conn, $query);
             <li>
                 <a href="a_event.php" class="active">
                     <i class='bx bx-calendar'></i>
-                    <span class="links_name">Event</span>
+                    <span class="links_name">EVENT</span>
                 </a>
             </li>
             <li>
                 <a href="a_chat.php">
                     <i class='bx bx-chat'></i>
-                    <span class="links_name">Chat</span>
+                    <span class="links_name">CHAT</span>
                 </a>
             </li>
             <li>
                 <a href="a_reportm.php">
                     <i class='bx bx-coin-stack'></i>
-                    <span class="links_name">Member Report</span>
+                    <span class="links_name">MEMBER REPORT</span>
                 </a>
             </li>
             <li>
                 <a href="a_reportw.php">
                     <i class='bx bx-coin-stack'></i>
-                    <span class="links_name">Watchman Report</span>
+                    <span class="links_name">WATCHMAN REPORT</span>
                 </a>
             </li>
             <li>
@@ -147,16 +126,18 @@ $result = mysqli_query($conn, $query);
             <li class="log_out">
                 <a href="session_unsetE.php">
                     <i class='bx bx-log-out'></i>
-                    <span class="links_name">Log out</span>
+                    <span class="links_name">LOG OUT</span>
                 </a>
             </li>
         </ul>
     </div>
     <section class="home-section">
         <nav>
-            <div class="sidebar-button"><i class='bx bx-menu sidebarBtn'></i><span class="dashboard">Event</span></div>
+            <div class="sidebar-button"><i class='bx bx-menu sidebarBtn'></i><span class="dashboard">EVENT</span></div>
             <div class="action">
-                <div class="profile" onclick="menuToggle();"><img src="images/host.png" alt=""></div>
+                <div class="profile" onclick="menuToggle();">
+                    <img src="images/host.png" alt="">
+                </div>
                 <div class="menu">
                     <h3>
                         <div id="eagleN"><b><?= $aname ?></b></div>
@@ -165,11 +146,22 @@ $result = mysqli_query($conn, $query);
                         <div id="eagleG"><?= $society ?></div>
                     </h3>
                     <ul>
-                        <li><a href="change_passE.php">Change Password</a></li>
+                        <li>
+                            <span class="material-icons icons-size">mode</span>
+                            <a href="change_passE.php">Change Password</a>
+                        </li>
                     </ul>
                 </div>
             </div>
+            <script>
+                function menuToggle() {
+                    const toggleMenu = document.querySelector('.menu');
+                    toggleMenu.classList.toggle('active')
+                }
+            </script>
+
         </nav>
+
         <div class="container" style="padding: 35px;"></div>
         <div class="container"
             style="background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -220,7 +212,8 @@ $result = mysqli_query($conn, $query);
             </div>
 
             <!-- Upcoming Events -->
-            <div class="card" style="border: 1px solid #ddd; border-radius: 8px;  overflow: hidden;">
+            <div class="card"
+                style="border: 1px solid #ddd; border-radius: 8px;  margin: 10px 0 0 0; overflow: hidden;">
                 <div class="card-header"
                     style="background-color: #081d45; color: #fff; padding: 15px; font-size: 1.25rem; font-weight: bold;">
                     Upcoming Events

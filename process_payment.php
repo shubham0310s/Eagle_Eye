@@ -2,11 +2,6 @@
 require("society_dbE.php");
 session_start();
 
-if (!isset($_SESSION['m_logged_in'])) {
-    header("Location: index.html");
-    exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount = mysqli_real_escape_string($conn, $_POST['amount']);
     $_SESSION['m_society'] = $society;  // Set the society registration number
