@@ -1,36 +1,23 @@
 <?php
-// Set secure session parameters
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => 'localhost', // Replace with your actual domain
-    'secure' => false,       // Set to true if using HTTPS
-    'httponly' => true,
-    'samesite' => 'Strict'
-]);
 
 // Start the session
 session_start();
-
-// Include database connection
 include("society_dbE.php");
 
-// Check if the user is logged in and a society is selected
-if (!isset($_SESSION['a_society']) || empty($_SESSION['a_society'])) {
-    echo "Please log in first.";
+if (!isset($_SESSION['a_logged_in'])) {
+    header("Location: index.html");
     exit;
 }
-if (isset($_SESSION['logged'])) {
-    if ($_SESSION['logged'] == true) {
-        header('Location:index.html');
-        exit;
-    } else {
-        header('Location:loginE.php');
-        exit;
-    }
-}
+if (isset($_SESSION['a_name']) && isset($_SESSION['a_email']) && isset($_SESSION['a_society'])) {
+    $aname = $_SESSION['a_name'];
+    $aemail = $_SESSION['a_email'];
+    $society = $_SESSION['a_society'];
+} else {
+    $aname = "name";
+    $aemail = "Email@gmail.com";
+    $society = "0000";
 
-// Fetch the society from the session
+}// Fetch the society from the session
 $society = $_SESSION['a_society'];
 
 // Fetch member data securely
@@ -113,26 +100,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
             <li>
                 <a href="a_event.php">
                     <i class='bx bx-calendar'></i>
-                    <span class="links_name">Event</span>
+                    <span class="links_name">EVENT</span>
                 </a>
             </li>
             <li>
                 <a href="a_chat.php" class="active">
                     <i class='bx bx-chat'></i>
-                    <span class="links_name">Chat</span>
+                    <span class="links_name">CHAT</span>
                 </a>
             </li>
 
             <li>
                 <a href="a_reportm.php">
                     <i class='bx bx-coin-stack'></i>
-                    <span class="links_name">Member Report</span>
+                    <span class="links_name">MEMBER REPORT</span>
                 </a>
             </li>
             <li>
                 <a href="a_reportw.php">
                     <i class='bx bx-coin-stack'></i>
-                    <span class="links_name">Watchman Report</span>
+                    <span class="links_name">WATCHMAN REPORT</span>
                 </a>
             </li>
             <li>
@@ -144,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
             <li class="log_out">
                 <a href="session_unsetE.php">
                     <i class='bx bx-log-out'></i>
-                    <span class="links_name">Log out</span>
+                    <span class="links_name">LOG OUT</span>
                 </a>
             </li>
         </ul>
@@ -205,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
             <div class="overview-boxes">
                 <div id="chat-container"
                     style="display: flex; width: 100%; height: 490px; border: 1px solid #ccc; border-radius: 8px;">
-                    <!-- Sidebar for Member and Watchman Lists -->
+                    <!-- Sidebar for Member, Admin, and Watchman Lists -->
                     <div id="sidebar"
                         style="width: 25%; height: 100%; background-color: #f8f9fa; overflow-y: auto; padding: 20px; border-right: 1px solid #ccc; border-radius: 8px 0 0 8px; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);">
                         <h3
@@ -237,7 +224,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                             </button>
                         </form>
                     </div>
-
                 </div>
                 <style>
                     .message-sent {
@@ -268,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                                     const listItem = document.createElement('li');
                                     listItem.textContent = `${member.m_name} (${member.flat_no})`;
                                     listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectMember(member.m_name, member.flat_no);
+                                    listItem.onclick = () => selectUser(member.m_name, member.flat_no, 'Member');
                                     memberList.appendChild(listItem);
                                 });
                             } else {
@@ -276,13 +262,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                             }
                         })
                         .catch(error => console.error('Error fetching members:', error));
-
-                    // Select Member Functionality
-                    function selectMember(name, flatNo) {
-                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong style="font-weight: bold;">${name}</strong> (Flat: ${flatNo})</p>`;
-                        // Enable Send Button after selection
-                        document.getElementById('send-button').disabled = false;
-                    }
 
                     // Fetch Watchmen from Database
                     fetch('fetch_watchmen.php')
@@ -295,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                                     const listItem = document.createElement('li');
                                     listItem.textContent = `${watchman.w_name}`;
                                     listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectWatchman(watchman.w_name);
+                                    listItem.onclick = () => selectUser(watchman.w_name, '', 'Watchman');
                                     watchmanList.appendChild(listItem);
                                 });
                             } else {
@@ -308,8 +287,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                     fetch('fetch_admins.php')
                         .then(response => response.json())
                         .then(data => {
-                            console.log(data); // Check the response data
-
                             if (data.status === 'success') {
                                 const adminList = document.getElementById('admins');
                                 adminList.innerHTML = ''; // Clear existing list
@@ -317,30 +294,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                                     const listItem = document.createElement('li');
                                     listItem.textContent = `${admin.a_name}`;
                                     listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectAdmin(admin.a_name); // Add onclick event
+                                    listItem.onclick = () => selectUser(admin.a_name, '', 'Admin');
                                     adminList.appendChild(listItem);
                                 });
                             } else {
-                                console.error(data.message); // Print error message if no success
+                                console.error(data.message);
                             }
                         })
                         .catch(error => console.error('Error fetching admins:', error));
 
-                    // Function to handle admin selection
-                    function selectAdmin(name) {
-                        const chatMessages = document.getElementById('chat-messages');
-                        chatMessages.innerHTML = `<p style="text-align: center;"> <strong>${name}</strong> (Admin)</p>`;
+                    // Select User Functionality
+                    function selectUser(name, flatNo, role) {
+                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong style="font-weight: bold;">${name}</strong> (${role} ${flatNo ? `Flat: ${flatNo}` : ''})</p>`;
                         document.getElementById('send-button').disabled = false; // Enable Send Button
                     }
 
-                    // Select Watchman Functionality
-                    function selectWatchman(name) {
-                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong>${name}</strong></p>`;
-                        // Enable Send Button after selection
-                        document.getElementById('send-button').disabled = false;
-                    }
+                    let currentRole = ''; // Role of the user (Admin/Member)
+                    let selectedChatUser = ''; // Currently selected user to chat
 
-                    // Chat Form Submission
+                    // WebSocket for Real-time Messaging
                     const ws = new WebSocket('ws://localhost:8080/chat');
 
                     ws.onopen = () => {
@@ -360,39 +332,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         console.log('WebSocket closed');
                     };
 
-                    // Sending messages
+                    // Sending Messages
                     document.getElementById('chat-form').addEventListener('submit', (e) => {
                         e.preventDefault();
                         const messageInput = document.getElementById('chat-input');
                         const message = messageInput.value.trim();
 
                         if (message) {
-                            const data = {
+                            const messageData = {
+                                sender_role: 'Admin', // or 'Member' dynamically
+                                sender_name: "Shubham", // Replace with logged-in Admin's name
+                                recipient_role: 'Member',
+                                recipient_name: "Bhargavi", // Replace with selected Member's name
                                 message,
-                                sender: 'Admin', // Change based on the user role
-                                timestamp: new Date()
                             };
-                            ws.send(JSON.stringify(data));
-                            displayMessage(message, 'You', new Date(), 'sent');
-                            messageInput.value = '';
+
+                            // Save message to the database
+
+                            function displayMessage(message, sender, timestamp, type) {
+                                const chatMessages = document.getElementById('chat-messages');
+                                const newMessage = document.createElement('div');
+                                newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
+
+                                newMessage.innerHTML = `<strong>${sender}</strong> (${timestamp}): <br>${message}`;
+                                chatMessages.appendChild(newMessage);
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                                function fetchMessages(senderName, recipientName) {
+                                    fetch('fetch_messages.php', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ sender_name: senderName, recipient_name: recipientName }),
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.status === 'success') {
+                                                const chatMessages = document.getElementById('chat-messages');
+                                                chatMessages.innerHTML = ''; // Clear previous messages
+                                                data.data.forEach(msg => {
+                                                    displayMessage(msg.message, msg.sender_name, msg.timestamp, msg.sender_role === 'Admin' ? 'received' : 'sent');
+                                                });
+                                            } else {
+                                                console.error(data.message);
+                                            }
+                                        })
+                                        .catch(error => console.error('Error fetching messages:', error));
+                                }
+
+                            }
+                            fetch('save_message.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(messageData),
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        displayMessage(message, 'You', new Date().toLocaleString(), 'sent');
+                                        messageInput.value = ''; // Clear input
+                                    } else {
+                                        console.error(data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Error saving message:', error));
                         }
                     });
-
-                    function displayMessage(message, sender, timestamp, type) {
-                        const chatMessages = document.getElementById('chat-messages');
-                        const newMessage = document.createElement('div');
-                        newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
-
-                        newMessage.innerHTML = `
-        <strong>${sender}</strong> (${timestamp}): <br>${message}
-    `;
-                        chatMessages.appendChild(newMessage);
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
-
                 </script>
-
             </div>
+
         </div>
 
 

@@ -1,6 +1,5 @@
 <?php
 include("society_dbE.php");
-// include("visitor_db.php");
 session_start();
 if (!isset($_SESSION['w_logged_in'])) {
   header("Location: index.html");

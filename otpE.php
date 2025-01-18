@@ -68,7 +68,7 @@ if (time() > $_SESSION['expire']) {
 			<input type="number" style='letter-spacing: 16px; font-size: 20px;' name="otp" placeholder="0-0-0-0-0-0"
 				id="otp" required>
 
-			<b>Didn't receive OTP </b>&nbsp;<a href="newotpE.php">SEND Again</a>&nbsp;<br>
+			<b>Didn't receive OTP </b>&nbsp;<a href="newotpE.php">Send Again</a>&nbsp;<br>
 
 			<?php
 			// check to see if the user successfully created an account

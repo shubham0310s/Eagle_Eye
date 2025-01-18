@@ -1,10 +1,7 @@
 <?php
 include("society_dbE.php");
 session_start();
-if (!isset($_SESSION['m_logged_in'])) {
-    header("Location: index.html");
-    exit;
-}
+
 if (isset($_SESSION["m_flat"])) {
     $society = $_SESSION["m_society"];
     $find = $society . "_";

@@ -1,13 +1,4 @@
 <?php
-// Set secure session parameters before starting the session
-session_set_cookie_params([
-  'lifetime' => 0,
-  'path' => '/',
-  'domain' => 'localhost', // Replace with your actual domain
-  'secure' => false,       // Set to true if using HTTPS
-  'httponly' => true,
-  'samesite' => 'Strict'
-]);
 
 // Start the session
 session_start();
@@ -22,9 +13,9 @@ if (!isset($_SESSION['a_logged_in']) || $_SESSION['a_logged_in'] !== true) {
 }
 
 // Initialize variables
-$society = $_SESSION["a_society"] ?? null;
 $aname = $_SESSION['a_name'] ?? "name";
 $aemail = $_SESSION['a_email'] ?? "Email@gmail.com";
+$society = $_SESSION["a_society"] ?? null;
 $vresult = false;
 
 // Fetch visitor data if society information is available
@@ -74,25 +65,25 @@ error_log("Session active for: $aname ($aemail) | Society: $society");
       <li>
         <a href="a_event.php">
           <i class='bx bx-calendar'></i>
-          <span class="links_name">Event</span>
+          <span class="links_name">EVENT</span>
         </a>
       </li>
       <li>
         <a href="a_chat.php">
           <i class='bx bx-chat'></i>
-          <span class="links_name">Chat</span>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
         <a href="a_reportm.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member Report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
       <li>
         <a href="a_reportw.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Watchman Report</span>
+          <span class="links_name">WATCHMAN REPORT</span>
         </a>
       </li>
       <li>
@@ -104,7 +95,7 @@ error_log("Session active for: $aname ($aemail) | Society: $society");
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name">LOG OUT</span>
         </a>
       </li>
     </ul>
@@ -136,13 +127,14 @@ error_log("Session active for: $aname ($aemail) | Society: $society");
               <?php
               echo "<div id = 'eagleN'><b>" . $aname . "</b></div>";
               echo "<div id = 'eagleR'> Admin </div>";
-              echo "<div id = 'eagleG'>" . $aemail . "</div>"
+              echo "<div id = 'eagleG'>" . $aemail . "</div>";
+              echo "<div id = 'eagleG'>" . $society . "</div>"
                 ?>
             </h3>
             <ul>
               <li>
                 <span class="material-icons icons-size">mode</span>
-                <a href="change_passE.php">update Password</a>
+                <a href="change_passE.php">Change Password</a>
               </li>
             </ul>
           </div>

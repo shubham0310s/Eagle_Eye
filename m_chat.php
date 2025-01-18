@@ -176,7 +176,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
             <div class="overview-boxes">
                 <div id="chat-container"
                     style="display: flex; width: 100%; height: 490px; border: 1px solid #ccc; border-radius: 8px;">
-                    <!-- Sidebar for Member and Watchman Lists -->
+                    <!-- Sidebar for Admin and Watchman Lists -->
                     <div id="sidebar"
                         style="width: 25%; height: 100%; background-color: #f8f9fa; overflow-y: auto; padding: 20px; border-right: 1px solid #ccc; border-radius: 8px 0 0 8px; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);">
                         <h3
@@ -208,7 +208,6 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                             </button>
                         </form>
                     </div>
-
                 </div>
                 <style>
                     .message-sent {
@@ -239,7 +238,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                                     const listItem = document.createElement('li');
                                     listItem.textContent = `${member.m_name} (${member.flat_no})`;
                                     listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectMember(member.m_name, member.flat_no);
+                                    listItem.onclick = () => selectUser(member.m_name, member.flat_no, 'Member');
                                     memberList.appendChild(listItem);
                                 });
                             } else {
@@ -247,13 +246,6 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                             }
                         })
                         .catch(error => console.error('Error fetching members:', error));
-
-                    // Select Member Functionality
-                    function selectMember(name, flatNo) {
-                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong style="font-weight: bold;">${name}</strong> (Flat: ${flatNo})</p>`;
-                        // Enable Send Button after selection
-                        document.getElementById('send-button').disabled = false;
-                    }
 
                     // Fetch Watchmen from Database
                     fetch('fetch_watchmen.php')
@@ -266,7 +258,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                                     const listItem = document.createElement('li');
                                     listItem.textContent = `${watchman.w_name}`;
                                     listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectWatchman(watchman.w_name);
+                                    listItem.onclick = () => selectUser(watchman.w_name, '', 'Watchman');
                                     watchmanList.appendChild(listItem);
                                 });
                             } else {
@@ -279,8 +271,6 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                     fetch('fetch_admins.php')
                         .then(response => response.json())
                         .then(data => {
-                            console.log(data); // Check the response data
-
                             if (data.status === 'success') {
                                 const adminList = document.getElementById('admins');
                                 adminList.innerHTML = ''; // Clear existing list
@@ -288,30 +278,25 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                                     const listItem = document.createElement('li');
                                     listItem.textContent = `${admin.a_name}`;
                                     listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectAdmin(admin.a_name); // Add onclick event
+                                    listItem.onclick = () => selectUser(admin.a_name, '', 'Admin');
                                     adminList.appendChild(listItem);
                                 });
                             } else {
-                                console.error(data.message); // Print error message if no success
+                                console.error(data.message);
                             }
                         })
                         .catch(error => console.error('Error fetching admins:', error));
 
-                    // Function to handle admin selection
-                    function selectAdmin(name) {
-                        const chatMessages = document.getElementById('chat-messages');
-                        chatMessages.innerHTML = `<p style="text-align: center;"> <strong>${name}</strong> (Admin)</p>`;
+                    // Select User Functionality
+                    function selectUser(name, flatNo, role) {
+                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong style="font-weight: bold;">${name}</strong> (${role} ${flatNo ? `Flat: ${flatNo}` : ''})</p>`;
                         document.getElementById('send-button').disabled = false; // Enable Send Button
                     }
 
-                    // Select Watchman Functionality
-                    function selectWatchman(name) {
-                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong>${name}</strong></p>`;
-                        // Enable Send Button after selection
-                        document.getElementById('send-button').disabled = false;
-                    }
+                    let currentRole = ''; // Role of the user (Admin/Member)
+                    let selectedChatUser = ''; // Currently selected user to chat
 
-                    // Chat Form Submission
+                    // WebSocket for Real-time Messaging
                     const ws = new WebSocket('ws://localhost:8080/chat');
 
                     ws.onopen = () => {
@@ -331,39 +316,79 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                         console.log('WebSocket closed');
                     };
 
-                    // Sending messages
+                    // Sending Messages
                     document.getElementById('chat-form').addEventListener('submit', (e) => {
                         e.preventDefault();
                         const messageInput = document.getElementById('chat-input');
                         const message = messageInput.value.trim();
 
                         if (message) {
-                            const data = {
+                            const messageData = {
+                                sender_role: 'Admin', // or 'Member' dynamically
+                                sender_name: "Shubham", // Replace with logged-in Admin's name
+                                recipient_role: 'Member',
+                                recipient_name: selectUser, // Replace with selected Member's name
                                 message,
-                                sender: 'Admin', // Change based on the user role
-                                timestamp: new Date()
                             };
-                            ws.send(JSON.stringify(data));
-                            displayMessage(message, 'You', new Date().toLocaleTimeString(), 'sent');
-                            messageInput.value = '';
+
+                            // Save message to the database
+
+                            function displayMessage(message, sender, timestamp, type) {
+                                const chatMessages = document.getElementById('chat-messages');
+                                const newMessage = document.createElement('div');
+                                newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
+
+                                newMessage.innerHTML = `<strong>${sender}</strong> (${timestamp}): <br>${message}`;
+                                chatMessages.appendChild(newMessage);
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                                function fetchMessages(senderName, recipientName) {
+                                    fetch('fetch_messages.php', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ sender_name: senderName, recipient_name: recipientName }),
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.status === 'success') {
+                                                const chatMessages = document.getElementById('chat-messages');
+                                                chatMessages.innerHTML = ''; // Clear previous messages
+                                                data.data.forEach(msg => {
+                                                    displayMessage(msg.message, msg.sender_name, msg.timestamp, msg.sender_role === 'Admin' ? 'received' : 'sent');
+                                                });
+                                            } else {
+                                                console.error(data.message);
+                                            }
+                                        })
+                                        .catch(error => console.error('Error fetching messages:', error));
+                                }
+
+                            }
+                            fetch('save_message.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(messageData),
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        displayMessage(message, 'You', new Date().toLocaleString(), 'sent');
+                                        messageInput.value = ''; // Clear input
+                                    } else {
+                                        alert(`Error: ${data.message}`);
+                                        console.error('Save message error:', data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    alert('Network error while saving message.');
+                                    console.error('Error saving message:', error);
+                                });
                         }
                     });
-
-                    function displayMessage(message, sender, timestamp, type) {
-                        const chatMessages = document.getElementById('chat-messages');
-                        const newMessage = document.createElement('div');
-                        newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
-
-                        newMessage.innerHTML = `
-        <strong>${sender}</strong> (${timestamp}): <br>${message}
-    `;
-                        chatMessages.appendChild(newMessage);
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
-
                 </script>
 
             </div>
+
         </div>
     </section>
     <script>

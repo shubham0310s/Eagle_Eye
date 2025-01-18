@@ -56,7 +56,7 @@ if (isset($_POST['registerBtn'])) {
 					$mail->IsSMTP(); // enable SMTP
 
 					//Server settings
-					$mail->SMTPDebug = 2;                                 // Enable verbose debug output                               
+					$mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
 					$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
 					$mail->SMTPAuth = true;                               // Enable SMTP authentication
 					$mail->Username = 'demonslayer1me2u@gmail.com';                 // SMTP username
@@ -73,7 +73,7 @@ if (isset($_POST['registerBtn'])) {
 					$mail->isHTML(true);                                  // Set email format to HTML
 					$mail->Subject = 'Eagle Eye';
 					$mail->Body = $message;
-					$mail->AltBody = '';
+					$mail->AltBody = strip_tags($message); // Fallback plain text body
 
 					//send the message and check for errors
 					if (!$mail->send()) {
@@ -165,8 +165,25 @@ if (isset($_POST['registerBtn'])) {
 			<script>
 				$(document).ready(function () {
 					$("#society_reg").on("blur", function () {
-						if (!$(this).val().match(/^[1-9][0-9]{4}$/)) {
-							alert("Please enter a valid Society_reg (4 digits starting from 1000 to 9999).");
+						// Regular expression to validate the society no. (4 digits starting from 1000 to 9999)
+						if (!$(this).val().match(/^[1-9][0-9]{3}$/)) {
+							alert("Please enter a valid Society No. (4 digits starting from 1000 to 9999).");
+						}
+					});
+				});
+			</script>
+			<label for="email">
+				<i class="fas fa-envelope"></i>
+			</label>
+			</head>
+			<input type="email" name="email" placeholder="example@gmail.com" id="email" required>
+
+			<script>
+				$(document).ready(function () {
+					$("#email").on("blur", function () {
+						// Regular expression to validate the email (gmail address)
+						if (!$(this).val().match(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)) {
+							alert("Please enter a valid gmail address.");
 						}
 					});
 				});
@@ -177,11 +194,16 @@ if (isset($_POST['registerBtn'])) {
 			</label>
 			<input type="password"
 				title="Password must contain at least 8 characters, including UPPER/lowercase and numbers"
-				name="password" placeholder="Password" minlength="8" id="password" required
-				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange="
-  this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
-  if(this.checkValidity()) form.conpassword.pattern = RegExp.escape(this.value);
-">
+				name="password" placeholder="Password" minlength="8" id="password" required>
+
+			<script>$(document).ready(function () {
+					$("#password").on("blur", function () {
+						// Regular expression to validate the password (at least 8 characters, including UPPER/lowercase and numbers)
+						if (!$(this).val().match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)) {
+							alert("Password must contain at least 8 characters, including UPPER/lowercase and numbers.");
+						}
+					});
+				});</script>
 
 
 
@@ -195,20 +217,7 @@ if (isset($_POST['registerBtn'])) {
 ">
 
 
-			<label for="email">
-				<i class="fas fa-envelope"></i>
-			</label>
-			<input type="email" name="email" pattern=".+@gmail\.com" placeholder="example@gmail.com" id="email"
-				required>
 
-			<script>$(document).ready(function () {
-					$("#email").on("blur", function () {
-						if (!$(this).val().match(/^.+@\gmail.com$/)) {
-							alert("Please enter a valid gmail address");
-						}
-					});
-				});
-			</script>
 
 			<?php
 			// check to see if the user successfully created an account
