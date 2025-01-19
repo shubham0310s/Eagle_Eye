@@ -1,5 +1,5 @@
 <?php
-include("visitor_db.php");
+include("society_dbE.php");
 session_start();
 if (!isset($_SESSION['w_logged_in'])) {
   header("Location: index.html");
@@ -7,7 +7,7 @@ if (!isset($_SESSION['w_logged_in'])) {
 }
 if (isset($_SESSION["w_society"])) {
   $society = $_SESSION["w_society"];
-  $vresult = mysqli_query($con, "SELECT * FROM `visitor_table` WHERE `society_reg`='{$society}' AND `status`='Approved' OR `society_reg`='{$society}' AND `status`='Denied'");
+  $vresult = mysqli_query($conn, "SELECT * FROM `visitor_table` WHERE `society_reg`='{$society}' AND `status`='Approved' OR `society_reg`='{$society}' AND `status`='Denied'");
 
 }
 if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION['w_society'])) {
@@ -47,31 +47,38 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
       <li>
         <a href="w_dashboardE.php">
           <i class='bx bx-grid-alt'></i>
-          <span class="links_name">Home</span>
+          <span class="links_name">HOME</span>
         </a>
       </li>
       <li>
         <a href="w_formE.php">
           <i class='bx bx-box'></i>
-          <span class="links_name">Visitor Entry</span>
+          <span class="links_name">VISITOR ENTRY</span>
         </a>
       </li>
       <li>
-        <a href="#" class="active">
-          <i class='bx bx-list-ul'></i>
-          <span class="links_name">History</span>
+        <a href="w_chat.php">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
         <a href="w_report.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
+      <li>
+        <a href="#" class="active">
+          <i class='bx bx-list-ul'></i>
+          <span class="links_name">HISTORY</span>
+        </a>
+      </li>
+
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name">LOG OUT</span>
         </a>
       </li>
     </ul>
@@ -126,11 +133,8 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
 
 
     <div class="home-content">
-
-
       <div class="sales-boxes">
         <div class="recent-sales box">
-
           <div class="sales-details">
             <ul class="details">
               <li class="topic">Image</li>
@@ -138,7 +142,7 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
               if ($vresult) {
                 while ($row = mysqli_fetch_array($vresult)) {
 
-                  echo "<li><a href='visitor_image/" . $row['v_image'] . "'><img src='visitor_image/" . $row['v_image'] . "' height = '45px' width = '45px'></a></li>";
+                  echo "<li><a href='visitor_image/" . $row['v_image'] . "'><img src='visitor_image/" . $row['v_image'] . "' height = '35px' width = '45px'></a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
                 ?>

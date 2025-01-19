@@ -5,15 +5,17 @@ if (!isset($_SESSION['w_logged_in'])) {
   header("Location: index.html");
   exit;
 }
+if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION['w_society'])) {
+  $wname = $_SESSION['w_name'];
+  $wemail = $_SESSION['w_email'];
+  $wsociety = $_SESSION['w_society'];
+} else {
+  $wname = "name";
+  $wemail = "Email@gmail.com";
+  $wsociety = "0000";
+}
 $society = "";
 date_default_timezone_set("Asia/Kolkata");
-// Database connection information for society data 
-$DATABASE_HOST = 'localhost';
-$DATABASE_USER = 'root';
-$DATABASE_PASS = '';
-$DATABASE_NAME = 'society_data';
-// Try and connect using the info above.
-$con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
 $society = $_SESSION['w_society'];
 $result = mysqli_query($conn, "SELECT `flat_no` FROM `member_table` WHERE `society_reg`='{$society}'");
@@ -27,38 +29,56 @@ if (isset($_POST['sent'])) {
   $flat = mysqli_real_escape_string($conn, $_POST['flat']);
   $meet = mysqli_real_escape_string($conn, $_POST['meet']);
 
+
   //storing all necessary data into the respective variables.
-  $file = $_FILES['file'];
-  $file_name = $file['name'];
-  $file_type = $file['type'];
-  $file_size = $file['size'];
-  $file_path = $file['tmp_name'];
+  if (isset($_POST['captured_image']) && !empty($_POST['captured_image'])) {
+    $capturedImage = $_POST['captured_image'];
+    $imageData = explode(',', $capturedImage);
 
-  if ($name != "" && $phone != "" && $flat != "" && $meet != "" && $file_name != "") {
-    if (($file_type = "image/jpeg" || $file_type = "image/png") && $file_size <= 41943040) {
-      //"images" is just a folder name here we will load the file.
-      $date = date('Y-m-d H:i:s.u');
+    if (count($imageData) == 2) {
+      $imageBase64 = $imageData[1];
+      $imageName = uniqid("visitor_", true) . ".png";
+      $imagePath = "visitor_image/" . $imageName;
 
-      mysqli_query($con, "INSERT INTO `visitor_table`(`visitor_id`, `v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) VALUES ('{}','{$name}','{$file_name}','{$society}','{$phone}','{$date}','{$meet}','{$flat}','pending')");
-      move_uploaded_file($file_path, 'visitor_image/' . $file_name);
-      // verify the user's account was created
+      // Save image to server
+      if (file_put_contents($imagePath, base64_decode($imageBase64))) {
+        // Database insertion logic
+      } else {
+        $error_msg = "Error saving image.";
+      }
+    } else {
+      $error_msg = "Invalid image data.";
+    }
+  } else {
+    $error_msg = "Captured image is missing.";
+  }
 
-      $query = mysqli_query($con, "SELECT * FROM `visitor_table` WHERE `v_name`='{$name}' AND `phone_no`='{$phone}'");
 
-      if (mysqli_num_rows($query) == 1) {
+  if ($name != "" && $phone != "" && $flat != "" && $meet != "" && $capturedImage != "") {
+    // if (($file_type = "image/jpeg" || $file_type = "image/png") && $file_size <= 41943040) {
+    //"images" is just a folder name here we will load the file.
+    $date = date('Y-m-d H:i:s.u');
 
-        $success = true;
+    mysqli_query($conn, "INSERT INTO `visitor_table`(`visitor_id`, `v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) VALUES ('{}','{$name}','{$imageName}','{$society}','{$phone}','{$date}','{$meet}','{$flat}','pending')");
+    // move_uploaded_file($file_path, 'visitor_image/' . $imageName);
+    // verify the user's account was created
 
-        $sql = "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='pending'";
-        $result = mysqli_query($con, $sql);
-        if (isset($result)) {
-          $_SESSION[$flat] = mysqli_num_rows($result);
-        }
+    $query = mysqli_query($conn, "SELECT * FROM `visitor_table` WHERE `v_name`='{$name}' AND `phone_no`='{$phone}'");
 
-        $flat_no = $society . "_" . $flat;
-        $Q = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat_no}'");
-        $rmail = mysqli_fetch_array($Q);
-        $message = "<h2><pre>YOU GOT A VISITOR!!
+    if (mysqli_num_rows($query) == 1) {
+
+      $success = true;
+
+      $sql = "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='pending'";
+      $result = mysqli_query($conn, $sql);
+      if (isset($result)) {
+        $_SESSION[$flat] = mysqli_num_rows($result);
+      }
+
+      $flat_no = $society . "_" . $flat;
+      $Q = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat_no}'");
+      $rmail = mysqli_fetch_array($Q);
+      $message = "<h2><pre>YOU GOT A VISITOR!!
 
              <b>Name :</b>" . $name . "
              <b>Phone :</b>" . $phone . "
@@ -67,50 +87,50 @@ if (isset($_POST['sent'])) {
              </pre></h2>";
 
 
-        //mailer function start here do not touch without permission
-        require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\PHPMailer.php';
-        require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\SMTP.php';
-        require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\Exception.php';
+      //mailer function start here do not touch without permission
+      require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\PHPMailer.php';
+      require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\SMTP.php';
+      require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\Exception.php';
 
-        $mail = new PHPMailer\PHPMailer\PHPMailer();
-        $mail->IsSMTP(); // enable SMTP
+      $mail = new PHPMailer\PHPMailer\PHPMailer();
+      $mail->IsSMTP(); // enable SMTP
 
-        //Server settings
-        $mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
-        $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
-        $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = 'eagleeye.local@gmail.com';                 // SMTP username
-        $mail->Password = 'qvxwtozigesmgmww';                           // SMTP password
-        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = 587;                                    // TCP port to connect to
+      //Server settings
+      $mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
+      $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+      $mail->SMTPAuth = true;                               // Enable SMTP authentication
+      $mail->Username = 'eagleeye.local@gmail.com';                 // SMTP username
+      $mail->Password = 'qvxwtozigesmgmww';                           // SMTP password
+      $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+      $mail->Port = 587;                                    // TCP port to connect to
 
-        //Recipients
-        $mail->setFrom('eagleeye.local@gmail.com', 'Mailer');
-        $mail->addAddress($rmail["m_email"], 'Recipient');     // Add a recipient
-        $mail->addReplyTo('eagleeye.local@gmail.com', 'Information');
+      //Recipients
+      $mail->setFrom('eagleeye.local@gmail.com', 'Mailer');
+      $mail->addAddress($rmail["m_email"], 'Recipient');     // Add a recipient
+      $mail->addReplyTo('eagleeye.local@gmail.com', 'Information');
 
-        //Content
-        $mail->isHTML(true);                                  // Set email format to HTML
-        $mail->Subject = 'Eagle Eye';
-        $mail->Body = $message;
-        $mail->AltBody = 'You GOT A Visitor';
+      //Content
+      $mail->isHTML(true);                                  // Set email format to HTML
+      $mail->Subject = 'Eagle Eye';
+      $mail->Body = $message;
+      $mail->AltBody = 'YOU GOT A VISITOR';
 
-        //send the message and check for errors
-        if (!$mail->send()) {
-          echo " Email failed to sent ";
-        }
-        //Mailer function ends here 
-
+      //send the message and check for errors
+      if (!$mail->send()) {
+        echo " Email failed to sent ";
       }
+      //Mailer function ends here 
 
-    } else {
-      $error_msg = 'Please choose valid file type';
     }
 
   } else {
-    $error_msg = 'Please fill out all required fields.';
+    $error_msg = 'Please choose valid file type';
   }
+
+} else {
+  $error_msg = 'Please fill out all required fields.';
 }
+// }
 ?>
 
 
@@ -146,189 +166,237 @@ if (isset($_POST['sent'])) {
       <li>
         <a href="w_dashboardE.php">
           <i class='bx bx-grid-alt'></i>
-          <span class="links_name">Home</span>
+          <span class="links_name">HOME</span>
         </a>
       </li>
       <li>
         <a href="#" class="active">
           <i class='bx bx-box'></i>
-          <span class="links_name">Visitor Entry</span>
+          <span class="links_name">VISITOR ENTRY</span>
         </a>
       </li>
       <li>
-        <a href="w_historyE.php">
-          <i class='bx bx-list-ul'></i>
-          <span class="links_name">History</span>
+        <a href="w_chat.php">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
         <a href="w_report.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
+      <li>
+        <a href="w_historyE.php">
+          <i class='bx bx-list-ul'></i>
+          <span class="links_name">HISTORY</span>
+        </a>
+      </li>
+
 
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name">LOG OUT</span>
         </a>
       </li>
     </ul>
   </div>
-  <!-- This start of account info function -->
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
-  <link
-    href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
-    rel="stylesheet">
-  </head>
 
-  <body>
-    <div class="action">
-      <div class="profile" onclick="menuToggle();">
-        <img src="images/host3.png" alt="">
+  <!-- This end of account info function -->
+  <section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">Visitor Entry</span>
       </div>
 
-      <div class="menu">
-        <h3>
-          <div id="eagleN"><b>
-              User Name</b>
+      <!-- This start of account info function -->
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="css/style.css">
+      <link
+        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+        rel="stylesheet">
+      </head>
+
+      <body>
+        <div class="action">
+          <div class="profile" onclick="menuToggle();">
+            <img src="images/host3.png" alt="">
           </div>
-          <div id="eagleR">
-            MEMBER
-          </div>
-          <div id="eagleG">
-            admin@gmail.com
-          </div>
-        </h3>
-        <ul>
-          <li>
-            <span class="material-icons icons-size">mode</span>
-            <a href="change_passE.php">Edit Password</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <script>
-      function menuToggle() {
-        const toggleMenu = document.querySelector('.menu');
-        toggleMenu.classList.toggle('active')
-      }
-    </script>
-    <!-- This end of account info function -->
-    <section class="home-section">
-      <nav>
-        <div class="sidebar-button">
-          <i class='bx bx-menu sidebarBtn'></i>
-          <span class="dashboard">Visitor Entry</span>
-        </div>
-      </nav>
 
-      <div class="home-content">
-
-        <div class="container">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="formId" enctype="multipart/form-data">
-
-            <label for="fname">Name</label>
-            <input type="text" id="fname" name="firstname" placeholder="Your name.." required>
-
-            <script>
-              $(document).ready(function () {
-                var alertShown = false; // Flag to track alert state
-
-                $("#fname").on("blur", function () {
-                  // Only trigger validation if the alert hasn't been shown already
-                  if (!alertShown && !$(this).val().match(/^[a-zA-Z]+ [a-zA-Z]+$/)) {
-                    alert("Please enter a valid name (first and last name only).");
-                    alertShown = true; // Set the flag to true once the alert is shown
-                  } else {
-                    alertShown = false; // Reset flag once a valid name is entered
-                  }
-                });
-              });
-            </script>
-
-
-            <label for="lname">Phone No.</label><br>
-            <input type="text" id="phone" name="phone" placeholder="1234-567-890" maxlength="10" required>
-
-            <script>
-              $(document).ready(function () {
-                var alertShown = false; // Flag to track if the alert has been shown
-
-                $("#phone").on("blur", function () {
-                  var phoneValue = $(this).val();
-
-                  // Regular expression for phone number in the format 1234-567-890
-                  var phonePattern = /^[0-9]{4}-[0-9]{3}-[0-9]{3}$/;
-
-                  // Only trigger the alert if the pattern doesn't match and alert hasn't been shown already
-                  if (!alertShown && !phoneValue.match(phonePattern)) {
-                    alert("Please enter a valid phone number in the format 1234-567-890.");
-                    alertShown = true; // Set the flag to true once the alert is shown
-                  } else {
-                    alertShown = false; // Reset the flag when a valid phone number is entered
-                  }
-                });
-              });
-            </script>
-
-            <label for="country">Flat No.</label>
-            <select id="country" name="flat">
-              <option value="" disabled selected>Flat no </option>
+          <div class="menu">
+            <h3>
               <?php
-              $find = $society . "_";
-
-              if ($result) {
-
-                while ($row = mysqli_fetch_array($result)) {
-                  $flat = str_replace($find, "", $row["flat_no"]);
-                  echo "<option value='$flat'>$flat<br></option>";
-                }
-              }
-
+              echo "<div id = 'eagleN'><b>" . $wname . "</b></div>";
+              echo "<div id = 'eagleR'> Watchman </div>";
+              echo "<div id = 'eagleG'>" . $wemail . "</div>";
+              echo "<div id = 'eagleG'>" . $wsociety . "</div>";
               ?>
-            </select><br>
-
-            <label for="fname">Reason to meet</label>
-            <input type="text" id="fname" name="meet" placeholder="Reason " required><br>
-
-            <input type="submit" name="sent" value="Submit">
-
-          </form>
+            </h3>
+            <ul>
+              <li>
+                <span class="material-icons icons-size">mode</span>
+                <a href="change_passE.php">Edit Password</a>
+              </li>
+            </ul>
+          </div>
         </div>
+        <script>
+          function menuToggle() {
+            const toggleMenu = document.querySelector('.menu');
+            toggleMenu.classList.toggle('active')
+          }
+        </script>
+
+    </nav>
+
+    <div class="home-content">
+
+      <div class="container">
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="formId" enctype="multipart/form-data">
+
+          <label for="fname">Name</label>
+          <input type="text" id="fname" name="firstname" placeholder="Your name.." required>
+
+          <script>
+            $(document).ready(function () {
+              var alertShown = false; // Flag to track alert state
+
+              $("#fname").on("blur", function () {
+                // Only trigger validation if the alert hasn't been shown already
+                if (!alertShown && !$(this).val().match(/^[a-zA-Z]+ [a-zA-Z]+$/)) {
+                  alert("Please enter a valid name (first and last name only).");
+                  alertShown = true; // Set the flag to true once the alert is shown
+                } else {
+                  alertShown = false; // Reset flag once a valid name is entered
+                }
+              });
+            });
+          </script>
 
 
+          <label for="lname">Phone No.</label><br>
+          <input type="text" id="phone" name="phone" placeholder="1234-567-890" maxlength="10" required>
+
+          <script>
+            $(document).ready(function () {
+              var alertShown = false; // Flag to track if the alert has been shown
+
+              $("#phone").on("blur", function () {
+                var phoneValue = $(this).val();
+
+                // Regular expression for phone number in the format 1234-567-890
+                var phonePattern = /^[0-9]{4}-[0-9]{3}-[0-9]{3}$/;
+
+                // Only trigger the alert if the pattern doesn't match and alert hasn't been shown already
+                if (!alertShown && !phoneValue.match(phonePattern)) {
+                  alert("Please enter a valid phone number in the format 1234-567-890.");
+                  alertShown = true; // Set the flag to true once the alert is shown
+                } else {
+                  alertShown = false; // Reset the flag when a valid phone number is entered
+                }
+              });
+            });
+          </script>
+
+          <label for="country">Flat No.</label>
+          <select id="country" name="flat">
+            <option value="" disabled selected>Flat no </option>
+            <?php
+            $find = $society . "_";
+
+            if ($result) {
+
+              while ($row = mysqli_fetch_array($result)) {
+                $flat = str_replace($find, "", $row["flat_no"]);
+                echo "<option value='$flat'>$flat<br></option>";
+              }
+            }
+
+            ?>
+          </select><br>
+
+          <label for="fname">Reason to meet</label>
+          <input type="text" id="fname" name="meet" placeholder="Reason " required><br>
+
+          <label for="fname">Photo</label>
+          <!-- Video preview -->
+          <video id="video" autoplay style="width: 300px; height: 200px; border: 1px solid #ccc;"></video>
+          <br>
+          <!-- Canvas to display captured image -->
+          <canvas id="canvas" style="display: none;"></canvas>
+          <br>
+          <!-- Buttons -->
+          <button type="button" id="capture-btn">Capture Image</button>
+          <button type="button" id="upload-btn" style="display: none;">Upload Image</button>
+          <input type="hidden" id="captured_image" name="captured_image">
+
+          <script>
+            const video = document.getElementById("video");
+            const canvas = document.getElementById("canvas");
+            const captureBtn = document.getElementById("capture-btn");
+            const uploadBtn = document.getElementById("upload-btn");
+            const capturedImageInput = document.getElementById("captured_image");
+
+            // Access the user's webcam
+            navigator.mediaDevices.getUserMedia({ video: true })
+              .then(stream => {
+                video.srcObject = stream;
+              })
+              .catch(error => {
+                console.error("Error accessing webcam:", error);
+              });
+
+            // Capture image from video
+            captureBtn.addEventListener("click", (e) => {
+              e.preventDefault(); // Prevent form submission
+              const context = canvas.getContext("2d");
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const imageDataURL = canvas.toDataURL("image/png"); // Convert canvas to Base64
+              capturedImageInput.value = imageDataURL; // Store Base64 string in hidden input
+              uploadBtn.style.display = "block"; // Show the upload button
+            });
+          </script>
+
+          <input type="submit" name="sent" value="Submit">
+
+        </form>
       </div>
-      </div>
-      </div>
-    </section>
 
 
-    <script>
-      let sidebar = document.querySelector(".sidebar");
-      let sidebarBtn = document.querySelector(".sidebarBtn");
-      sidebarBtn.onclick = function () {
-        sidebar.classList.toggle("active");
-        if (sidebar.classList.contains("active")) {
-          sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-        } else
-          sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-      }
-    </script>
-    <?php
-    // check to see if the user successfully created an account
-    if (isset($success) && $success == true) {
-      echo '<script>alert("sent Successful")</script>';
+    </div>
+    </div>
+    </div>
+  </section>
+
+
+  <script>
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".sidebarBtn");
+    sidebarBtn.onclick = function () {
+      sidebar.classList.toggle("active");
+      if (sidebar.classList.contains("active")) {
+        sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+      } else
+        sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
     }
-    if (isset($error_msg)) {
-      echo "<p>" . $error_msg . "</p>";
-    }
-    ?>
+  </script>
+  <?php
+  // check to see if the user successfully created an account
+  if (isset($success) && $success == true) {
+    echo '<script>alert("sent Successful")</script>';
+  }
+  if (isset($error_msg)) {
+    echo "<p>" . $error_msg . "</p>";
+  }
+  ?>
 
-  </body>
+</body>
 
 </html>

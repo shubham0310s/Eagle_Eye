@@ -66,16 +66,16 @@ if (isset($result)) {
         echo 'Data Not Found';
     }
 } else {
-    $output .= '<div style="width: 1193px; background-color: blanchedalmond; margin-left: -173px;">
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Name</th>
-                        <th>Residence</th>
-                        <th>Phone Number</th>
-                        <th>Flat Number</th>
-                        <th>Email</th>
-                   
-                    </tr>';
-    echo $output;
+    // $output .= '<div style="width: 1193px; background-color: blanchedalmond; margin-left: -173px;">
+    //             <table class="table table-bordered">
+    //                 <tr>
+    //                     <th>Name</th>
+    //                     <th>Residence</th>
+    //                     <th>Phone Number</th>
+    //                     <th>Flat Number</th>
+    //                     <th>Email</th>
+
+    //                 </tr>';
+    // echo $output;
 }
 ?>

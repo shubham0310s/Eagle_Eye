@@ -69,7 +69,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
       </li>
       <li>
         <a href="m_chat.php">
-          <i class='bx bx-calendar'></i>
+          <i class='bx bx-chat'></i>
           <span class="links_name">CHAT</span>
         </a>
       </li>

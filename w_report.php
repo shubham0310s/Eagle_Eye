@@ -40,32 +40,39 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
       <li>
         <a href="w_dashboardE.php">
           <i class='bx bx-grid-alt'></i>
-          <span class="links_name">Home</span>
+          <span class="links_name">HOME</span>
         </a>
       </li>
       <li>
         <a href="w_formE.php">
           <i class='bx bx-box'></i>
-          <span class="links_name">Visitor Entry</span>
+          <span class="links_name">VISITOR ENTRY</span>
         </a>
       </li>
       <li>
-        <a href="w_historyE.php">
-          <i class='bx bx-list-ul'></i>
-          <span class="links_name">History</span>
+        <a href="w_chat.php" ]>
+          <i class='bx bx-chat'></i>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
         <a href="" class="active">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
+      <li>
+        <a href="w_historyE.php">
+          <i class='bx bx-list-ul'></i>
+          <span class="links_name">HISTORY</span>
+        </a>
+      </li>
+
       <li>
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name">LOG OUT</span>
         </a>
       </li>
 
@@ -73,30 +80,6 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
   </div>
   <section class="home-section">
     <nav>
-      <div class="sidebar-button">
-        <i class='bx bx-menu sidebarBtn'></i>
-        <span class="dashboard">REPORT</span>
-      </div>
-      <div class="search-box">
-        <br />
-        <br />
-        <br />
-        <div class="form-group">
-          <div class="input-group">
-            <div class="search-box">
-              <input type="text" id="search_text" placeholder="Search...">
-            </div>
-          </div>
-        </div>
-        <br />
-        <div id="result"></div>
-      </div>
-      <div style="clear:both"></div>
-      <br />
-
-      <br />
-      <br />
-      <br />
       <!-- This start of account info function -->
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -140,45 +123,60 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
 
     </nav>
 
+    <div class="search-box" style="max-width: 600px; margin: 0 auto; text-align: center;">
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <div class="form-group" style="margin-bottom: 20px;">
+        <div class="input-group" style="display: flex; justify-content: center;">
+          <div class="search-box" style="width: 100%; max-width: 400px;">
+            <input type="text" id="search_text" placeholder="Search..."
+              style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); color: black;">
+          </div>
+        </div>
+      </div>
+      <br />
+      <div id="result" style="text-align: left; font-size: 14px; color: #333;"></div>
+    </div>
+    <div style="clear: both;"></div>
+  </section>
+  <script>
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".sidebarBtn");
+    sidebarBtn.onclick = function () {
+      sidebar.classList.toggle("active");
+      if (sidebar.classList.contains("active")) {
+        sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+      } else
+        sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+      load_data(); // Load all members initially
 
-
-
-    <script>
-      let sidebar = document.querySelector(".sidebar");
-      let sidebarBtn = document.querySelector(".sidebarBtn");
-      sidebarBtn.onclick = function () {
-        sidebar.classList.toggle("active");
-        if (sidebar.classList.contains("active")) {
-          sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-        } else
-          sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-      }
-    </script>
-    <script>
-      $(document).ready(function () {
-        load_data();
-        function load_data(query) {
-          $.ajax({
-            url: "w_fetch.php",
-            method: "post",
-            data: { query: query },
-            success: function (data) {
-              $('#result').html(data);
-            }
-          });
-        }
-
-        $('#search_text').keyup(function () {
-          var search = $(this).val();
-          if (search != '') {
-            load_data(search);
-          }
-          else {
-            load_data();
+      function load_data(query = '') {
+        console.log("Search query: " + query); // Debugging: log the query being sent
+        $.ajax({
+          url: "w_fetch.php",
+          method: "POST", // Ensure this is POST
+          data: { query: query }, // Send the query
+          success: function (data) {
+            $('#result').html(data); // Display the result in the HTML element
           }
         });
+      }
+
+      $('#search_text').keyup(function () {
+        const search = $(this).val(); // Get the input value
+        console.log("Search input: " + search); // Debugging: log the input value
+        load_data(search); // Pass the search value
       });
-    </script>
+    });
+
+  </script>
 
 </body>
 

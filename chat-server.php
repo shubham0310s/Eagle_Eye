@@ -1,7 +1,5 @@
 <?php
 require 'vendor/autoload.php';
-include("society_dbE.php"); // Include the database connection
-
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
@@ -12,13 +10,11 @@ class ChatServer implements MessageComponentInterface
 
     public function __construct()
     {
-        global $conn; // Use the database connection from society_dbE.php
         $this->clients = new \SplObjectStorage;
-        $this->db = $conn;
-
-        if (!$this->db) {
-            error_log("Database connection failed: " . mysqli_connect_error());
-            die("Database connection failed: " . mysqli_connect_error());
+        $this->db = new mysqli('localhost', 'root', '', 'society_data');
+        if ($this->db->connect_error) {
+            error_log("Database connection failed: " . $this->db->connect_error);
+            die("Database connection failed: " . $this->db->connect_error);
         }
     }
 
@@ -32,27 +28,16 @@ class ChatServer implements MessageComponentInterface
     {
         $data = json_decode($msg, true);
 
-        if (!isset($data['sender_id'], $data['receiver_id'], $data['message'])) {
-            error_log("Invalid message format: " . $msg);
-            return;
-        }
-
         // Save message to the database
-        if ($stmt = $this->db->prepare("INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)")) {
+        if (isset($data['sender_id'], $data['receiver_id'], $data['message'])) {
+            $stmt = $this->db->prepare("INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)");
             $stmt->bind_param("iis", $data['sender_id'], $data['receiver_id'], $data['message']);
-            if (!$stmt->execute()) {
-                error_log("Failed to execute statement: " . $stmt->error);
-            }
-            $stmt->close();
-        } else {
-            error_log("Failed to prepare statement: " . $this->db->error);
+            $stmt->execute();
         }
 
-        // Broadcast the message to other clients
+        // Broadcast the message
         foreach ($this->clients as $client) {
-            if ($client !== $from) {
-                $client->send($msg);
-            }
+            $client->send($msg);
         }
     }
 
