@@ -49,31 +49,38 @@ $visitor = mysqli_num_rows($v);
       <li>
         <a href="#" class="active">
           <i class='bx bx-grid-alt'></i>
-          <span class="links_name">Home</span>
+          <span class="links_name">HOME</span>
         </a>
       </li>
       <li>
         <a href="w_formE.php">
           <i class='bx bx-box'></i>
-          <span class="links_name">Visitor Entry</span>
+          <span class="links_name">VISITOR ENTRY</span>
         </a>
       </li>
       <li>
-        <a href="w_historyE.php">
-          <i class='bx bx-list-ul'></i>
-          <span class="links_name">History</span>
+        <a href="w_chat.php">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">CHAT</span>
         </a>
       </li>
       <li>
         <a href="w_report.php">
           <i class='bx bx-coin-stack'></i>
-          <span class="links_name">Member report</span>
+          <span class="links_name">MEMBER REPORT</span>
         </a>
       </li>
+      <li>
+        <a href="w_historyE.php">
+          <i class='bx bx-list-ul'></i>
+          <span class="links_name">HISTORY</span>
+        </a>
+      </li>
+
       <li class="log_out">
         <a href="session_unsetE.php">
           <i class='bx bx-log-out'></i>
-          <span class="links_name">Log out</span>
+          <span class="links_name">LOG OUT</span>
         </a>
       </li>
 

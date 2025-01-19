@@ -17,53 +17,10 @@ if (isset($_SESSION['a_name']) && isset($_SESSION['a_email']) && isset($_SESSION
     $aemail = "Email@gmail.com";
     $society = "0000";
 
-}// Fetch the society from the session
+}
+// Fetch the society from the session
 $society = $_SESSION['a_society'];
 
-// Fetch member data securely
-$query = "SELECT * FROM `member_table` WHERE `society_reg` = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("s", $society);
-$stmt->execute();
-$result = $stmt->get_result();
-$stmt->close();
-
-// Handle message sending
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_POST['receiver_id'])) {
-    // Validate and sanitize inputs
-    $message = trim($_POST['message']);
-    $receiver_id = intval($_POST['receiver_id']);
-    $receiver_role = $_POST['receiver_role'] ?? 'member'; // Receiver role from POST data
-    $sender_id = $_SESSION['id'] ?? null; // Ensure `id` is stored in the session
-    $sender_role = $_SESSION['role'] ?? 'member'; // Ensure `role` is stored in the session
-
-    // Check if sender ID and role exist in the session
-    if (!$sender_id || !$sender_role) {
-        echo "Error: Invalid sender credentials.";
-        exit;
-    }
-
-    // Ensure the message is not empty
-    if (empty($message)) {
-        echo "Message cannot be empty.";
-        exit;
-    }
-
-    // Insert the message securely
-    $query = "
-        INSERT INTO messages (sender_id, receiver_id, message, sender_role, receiver_role) 
-        VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("iisss", $sender_id, $receiver_id, $message, $sender_role, $receiver_role);
-
-    if ($stmt->execute()) {
-        echo "Message sent successfully!";
-    } else {
-        echo "Error: Unable to send message.";
-    }
-
-    $stmt->close();
-}
 ?>
 <!DOCTYPE html>
 <!-- Designined by CodingLab | www.youtube.com/codinglabyt -->
@@ -196,10 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                     <div id="sidebar"
                         style="width: 25%; height: 100%; background-color: #f8f9fa; overflow-y: auto; padding: 20px; border-right: 1px solid #ccc; border-radius: 8px 0 0 8px; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);">
                         <h3
-                            style="text-align: center; font-size: 18px; font-weight: bold; margin-top: 30px; color: #007bff;">
-                            Admin</h3>
-                        <ul id="admins" style="list-style: none; padding: 0; margin: 0;"></ul>
-                        <h3
                             style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #007bff;">
                             Members</h3>
                         <ul id="members" style="list-style: none; padding: 0; margin: 0;"></ul>
@@ -218,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         <form id="chat-form" style="display: flex; align-items: center; gap: 10px;">
                             <input type="text" id="chat-input" placeholder="Type your message..."
                                 style="flex: 1; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; outline: none; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); transition: border-color 0.3s;">
-                            <button type="submit" id="send-button" disabled
+                            <button type="submit" id="send-button"
                                 style="padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: not-allowed; opacity: 0.6; transition: background-color 0.3s; margin-bottom: 10px;">
                                 Send
                             </button>
@@ -242,6 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         border-radius: 5px;
                     }
                 </style>
+
                 <script>
                     // Fetch Members from Database
                     fetch('fetch_members.php')
@@ -283,34 +237,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         })
                         .catch(error => console.error('Error fetching watchmen:', error));
 
-                    // Fetch Admins from Database
-                    fetch('fetch_admins.php')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                const adminList = document.getElementById('admins');
-                                adminList.innerHTML = ''; // Clear existing list
-                                data.data.forEach(admin => {
-                                    const listItem = document.createElement('li');
-                                    listItem.textContent = `${admin.a_name}`;
-                                    listItem.style = "padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                                    listItem.onclick = () => selectUser(admin.a_name, '', 'Admin');
-                                    adminList.appendChild(listItem);
-                                });
-                            } else {
-                                console.error(data.message);
-                            }
-                        })
-                        .catch(error => console.error('Error fetching admins:', error));
-
                     // Select User Functionality
                     function selectUser(name, flatNo, role) {
-                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;"> <strong style="font-weight: bold;">${name}</strong> (${role} ${flatNo ? `Flat: ${flatNo}` : ''})</p>`;
+                        selectedChatUser = name; // Set selected user
+                        currentRole = role; // Set current role
+                        document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;">
+                                           <strong style="font-weight: bold;">${name}</strong> (${role} ${flatNo ? `Flat: ${flatNo}` : ''}) </p>`;
                         document.getElementById('send-button').disabled = false; // Enable Send Button
+                        fetchMessages("<?php echo ($aname); ?>", name); // Fetch chat history
                     }
-
-                    let currentRole = ''; // Role of the user (Admin/Member)
-                    let selectedChatUser = ''; // Currently selected user to chat
 
                     // WebSocket for Real-time Messaging
                     const ws = new WebSocket('ws://localhost:8080/chat');
@@ -321,8 +256,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
 
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
-                        displayMessage(data.message, data.sender, data.timestamp, 'received');
+                        if (data.sender_name === selectedChatUser || data.recipient_name === "<?php echo ($aname); ?>") {
+                            displayMessage(data.message, data.sender_name, data.timestamp, 'received');
+                        }
                     };
+
 
                     ws.onerror = (error) => {
                         console.error('WebSocket error:', error);
@@ -338,48 +276,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                         const messageInput = document.getElementById('chat-input');
                         const message = messageInput.value.trim();
 
-                        if (message) {
+                        if (message && selectedChatUser) {
                             const messageData = {
-                                sender_role: 'Admin', // or 'Member' dynamically
-                                sender_name: "Shubham", // Replace with logged-in Admin's name
-                                recipient_role: 'Member',
-                                recipient_name: "Bhargavi", // Replace with selected Member's name
-                                message,
+                                sender_role: 'Admin', // Adjusted sender role
+                                sender_name: "<?php echo ($aname); ?>", // Replace with logged-in member's name
+                                recipient_role: currentRole,
+                                recipient_name: selectedChatUser,
+                                message: message,
                             };
 
                             // Save message to the database
-
-                            function displayMessage(message, sender, timestamp, type) {
-                                const chatMessages = document.getElementById('chat-messages');
-                                const newMessage = document.createElement('div');
-                                newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
-
-                                newMessage.innerHTML = `<strong>${sender}</strong> (${timestamp}): <br>${message}`;
-                                chatMessages.appendChild(newMessage);
-                                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                                function fetchMessages(senderName, recipientName) {
-                                    fetch('fetch_messages.php', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ sender_name: senderName, recipient_name: recipientName }),
-                                    })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            if (data.status === 'success') {
-                                                const chatMessages = document.getElementById('chat-messages');
-                                                chatMessages.innerHTML = ''; // Clear previous messages
-                                                data.data.forEach(msg => {
-                                                    displayMessage(msg.message, msg.sender_name, msg.timestamp, msg.sender_role === 'Admin' ? 'received' : 'sent');
-                                                });
-                                            } else {
-                                                console.error(data.message);
-                                            }
-                                        })
-                                        .catch(error => console.error('Error fetching messages:', error));
-                                }
-
-                            }
                             fetch('save_message.php', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -389,14 +295,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message']) && isset($_
                                 .then(data => {
                                     if (data.status === 'success') {
                                         displayMessage(message, 'You', new Date().toLocaleString(), 'sent');
-                                        messageInput.value = ''; // Clear input
+                                        messageInput.value = ''; // Clear input field
+                                        // Send via WebSocket for real-time update
+                                        if (ws.readyState === WebSocket.OPEN) {
+                                            ws.send(JSON.stringify(messageData));
+                                        }
                                     } else {
-                                        console.error(data.message);
+                                        alert(`Error: ${data.message}`);
                                     }
                                 })
                                 .catch(error => console.error('Error saving message:', error));
                         }
                     });
+
+
+                    // Save message to the database
+
+                    function displayMessage(message, sender, timestamp, type) {
+                        const chatMessages = document.getElementById('chat-messages');
+                        const newMessage = document.createElement('div');
+                        newMessage.className = type === 'sent' ? 'message-sent' : 'message-received';
+                        newMessage.innerHTML = `<strong>${sender}</strong> (${timestamp}): <br>${message}`;
+                        chatMessages.appendChild(newMessage);
+                        chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
+                    }
+
+                    function fetchMessages(senderName, recipientName) {
+                        fetch('fetch_messages.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ sender_name: senderName, recipient_name: recipientName }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    const chatMessages = document.getElementById('chat-messages');
+                                    chatMessages.innerHTML = ''; // Clear previous messages
+                                    data.data.forEach(msg => {
+                                        displayMessage(msg.message, msg.sender_name, msg.timestamp, msg.sender_role === 'Admin' ? 'received' : 'sent');
+                                    });
+                                } else {
+                                    console.error(data.message);
+                                }
+                            })
+                            .catch(error => console.error('Error fetching messages:', error));
+                    }
+
                 </script>
             </div>
 

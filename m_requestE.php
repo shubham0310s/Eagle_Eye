@@ -90,7 +90,7 @@ if (mysqli_num_rows($result) == 0) {
       </li>
       <li>
         <a href="m_chat.php">
-          <i class='bx bx-box'></i>
+          <i class='bx bx-chat'></i>
           <span class="links_name">CHAT</span>
         </a>
       </li>

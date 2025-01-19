@@ -1,36 +1,38 @@
 <?php
 include("society_dbE.php");
-
 session_start();
-if (!isset($_SESSION['m_logged_in'])) {
+if (!isset($_SESSION['w_logged_in'])) {
     header("Location: index.html");
     exit;
 }
-if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION['m_flat']) && isset($_SESSION['m_society'])) {
-    $mname = $_SESSION['m_name'];
-    $memail = $_SESSION['m_email'];
-    $msociety = $_SESSION['m_society'];
-    $mflat_no = $_SESSION['m_flat'];
-    $find = $msociety . "_";
-    $mflat = str_replace($find, "", $mflat_no);
+if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION['w_society'])) {
+    $wname = $_SESSION['w_name'];
+    $wemail = $_SESSION['w_email'];
+    $wsociety = $_SESSION['w_society'];
 } else {
-    $mname = "name";
-    $memail = "Email@gmail.com";
-    $msociety = "0000";
-    $mflat = "A000";
+    $wname = "name";
+    $wemail = "Email@gmail.com";
+    $wsociety = "0000";
 
 }
+$m = mysqli_query($conn, "SELECT * FROM `member_table`");
+$member = mysqli_num_rows($m);
+$a = mysqli_query($conn, "SELECT * FROM `admin_table`");
+$admin = mysqli_num_rows($a);
+$w = mysqli_query($conn, "SELECT * FROM `watchman_table`");
+$watchman = mysqli_num_rows($w);
+$v = mysqli_query($conn, "SELECT * FROM `visitor_table`");
+$visitor = mysqli_num_rows($v);
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
-    <title> Member Dashboard </title>
+    <title>Watchman Dashboard </title>
     <link rel="shortcut icon" href="img/2.png" type="image/png">
-    <link rel="stylesheet" href="css\dashE.css">
+    <link rel="stylesheet" href="css/dashE.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,52 +42,37 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
     <div class="sidebar">
         <div class="logo-details">
             <img src="./img/logo.png" alt="Eagle Eye Logo" style="width: 50px; height: auto;" />
-            &emsp;&emsp;&emsp;
-            <span class="logo_name">Eagle Eye</span>
+
+            &emsp; &emsp; &emsp; <span class="logo_name">Eagle Eye </span>
         </div>
         <ul class="nav-links">
             <li>
-                <a href="m_dashboardE.php">
+                <a href="w_dashboardE.php">
                     <i class='bx bx-grid-alt'></i>
                     <span class="links_name">HOME</span>
                 </a>
             </li>
             <li>
-                <a href="">
-                    <i class='bx bx-receipt'></i>
-                    <span class="links_name">BILL</span>
+                <a href="w_formE.php">
+                    <i class='bx bx-box'></i>
+                    <span class="links_name">VISITOR ENTRY</span>
                 </a>
             </li>
             <li>
-                <a href="m_event.php">
-                    <i class='bx bx-calendar'></i>
-                    <span class="links_name">EVENT</span>
-                </a>
-            </li>
-            <li>
-                <a href="m_chat.php" class="active">
+                <a href="w_chat.php" class="active">
                     <i class='bx bx-chat'></i>
                     <span class="links_name">CHAT</span>
                 </a>
             </li>
             <li>
-                <a href="m_requestE.php">
-                    <i class='bx bx-list-ul'></i>
-                    <span class="links_name">APPROVE/DENIED</span>
-                    <?php
-                    if (isset($_SESSION[$mflat])) {
-                        $num = $_SESSION[$mflat];
-                        if ($num) {
-                            echo '<span class="material-icons">notifications</span>';
-                            echo '<span class="icon-button__badge">' . $num . '</span>';
-                        }
-                    }
-                    ?>
+                <a href="w_report.php">
+                    <i class='bx bx-coin-stack'></i>
+                    <span class="links_name">MEMBER REPORT</span>
                 </a>
             </li>
             <li>
-                <a href="m_historyE.php">
-                    <i class='bx bx-box'></i>
+                <a href="w_historyE.php">
+                    <i class='bx bx-list-ul'></i>
                     <span class="links_name">HISTORY</span>
                 </a>
             </li>
@@ -93,9 +80,10 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
             <li class="log_out">
                 <a href="session_unsetE.php">
                     <i class='bx bx-log-out'></i>
-                    <span class="links_name">Log out</span>
+                    <span class="links_name">LOG OUT</span>
                 </a>
             </li>
+
         </ul>
     </div>
     <section class="home-section">
@@ -117,17 +105,16 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
             <body>
                 <div class="action">
                     <div class="profile" onclick="menuToggle();">
-                        <img src="images/host2.png" alt="">
+                        <img src="images/host3.png" alt="">
                     </div>
 
                     <div class="menu">
                         <h3>
                             <?php
-                            echo "<div id = 'eagleN'><b>" . $mname . "</b></div>";
-                            echo "<div id = 'eagleR'>Member</div>";
-                            echo "<div id = 'eagleN'>" . $memail . "</div>";
-                            echo "<div id = 'eagleG'>" . $msociety . "</div>";
-                            echo "<div id = 'eagleG'>" . $mflat . "</div>";
+                            echo "<div id = 'eagleN'><b>" . $wname . "</b></div>";
+                            echo "<div id = 'eagleR'> Watchman </div>";
+                            echo "<div id = 'eagleG'>" . $wemail . "</div>";
+                            echo "<div id = 'eagleG'>" . $wsociety . "</div>";
                             ?>
                         </h3>
                         <ul>
@@ -145,8 +132,8 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                     }
                 </script>
                 <!-- This end of account info function -->
-        </nav>
 
+        </nav>
         <div class="home-content">
             <div class="overview-boxes">
                 <div id="chat-container"
@@ -269,7 +256,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
                         document.getElementById('chat-messages').innerHTML = `<p style="text-align: center;">
                                            <strong style="font-weight: bold;">${name}</strong> (${role} ${flatNo ? `Flat: ${flatNo}` : ''}) </p>`;
                         document.getElementById('send-button').disabled = false; // Enable Send Button
-                        fetchMessages("<?php echo ($mname); ?>", name); // Fetch chat history
+                        fetchMessages("<?php echo ($wname); ?>", name); // Fetch chat history
                     }
 
                     // WebSocket for Real-time Messaging
@@ -281,7 +268,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
 
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
-                        if (data.sender_name === selectedChatUser || data.recipient_name === "<?php echo ($mname); ?>") {
+                        if (data.sender_name === selectedChatUser || data.recipient_name === "<?php echo ($wname); ?>") {
                             displayMessage(data.message, data.sender_name, data.timestamp, 'received');
                         }
                     };
@@ -303,8 +290,8 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
 
                         if (message && selectedChatUser) {
                             const messageData = {
-                                sender_role: 'Member', // Adjusted sender role
-                                sender_name: "<?php echo ($mname); ?>", // Replace with logged-in member's name
+                                sender_role: 'Watchman', // Adjusted sender role
+                                sender_name: "<?php echo ($wname); ?>", // Replace with logged-in member's name
                                 recipient_role: currentRole,
                                 recipient_name: selectedChatUser,
                                 message: message,
@@ -371,18 +358,20 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
             </div>
 
         </div>
-    </section>
-    <script>
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else
-                sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-        }
-    </script>
+
+
+
+        <script>
+            let sidebar = document.querySelector(".sidebar");
+            let sidebarBtn = document.querySelector(".sidebarBtn");
+            sidebarBtn.onclick = function () {
+                sidebar.classList.toggle("active");
+                if (sidebar.classList.contains("active")) {
+                    sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+                } else
+                    sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+        </script>
 
 </body>
 

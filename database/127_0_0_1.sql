@@ -16,7 +16,7 @@ CREATE TABLE `admin_table` (
   `ad_password` VARCHAR(100) NOT NULL,
   `society_reg` INT(4) NOT NULL,
   `a_email` VARCHAR(50) NOT NULL,
-  `a_name` TEXT NOT NULL,
+  `a_name` TEXT NOT NULL, 
   PRIMARY KEY (`admin_id`, `society_reg`),
   UNIQUE KEY `a_email` (`a_email`),
   KEY `society_reg` (`society_reg`)
@@ -59,7 +59,6 @@ CREATE TABLE `watchman_table` (
   `society_reg` INT(4) NOT NULL,
   `w_name` TEXT NOT NULL,
   `w_email` VARCHAR(50) NOT NULL,
-  `w_docs` TEXT NOT NULL,
   `w_phno` BIGINT(10) UNIQUE,
   PRIMARY KEY (`watchman_id`),
   UNIQUE KEY `w_email` (`w_email`),
@@ -125,5 +124,18 @@ VALUES
 --   CONSTRAINT `fk_flat_no` FOREIGN KEY (`flat_no`) REFERENCES `member_table`(`flat_no`) ON DELETE CASCADE ON UPDATE CASCADE,
 --   CONSTRAINT `fk_society_reg` FOREIGN KEY (`society_reg`) REFERENCES `member_table`(`society_reg`) ON DELETE CASCADE ON UPDATE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+-- Table structure for `messages`
+-- --------------------------------------------------------
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_role ENUM('Admin', 'Member', 'Watchman') NOT NULL,
+    sender_name VARCHAR(255) NOT NULL,
+    recipient_role ENUM('Admin', 'Member', 'Watchman') NOT NULL,
+    recipient_name VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 COMMIT;
