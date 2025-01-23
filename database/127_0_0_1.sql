@@ -112,20 +112,6 @@ VALUES
 ('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 1234);
 
 -- --------------------------------------------------------
--- Table structure for `payments`
--- --------------------------------------------------------
--- CREATE TABLE `payments` (
---   `payment_id` INT AUTO_INCREMENT PRIMARY KEY,
---   `society_reg` INT(4) NOT NULL,
---   `flat_no` VARCHAR(9) NOT NULL,
---   `amount` DECIMAL(10, 2) NOT NULL,
---   `payment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---   `status` VARCHAR(20) DEFAULT 'Pending',
---   CONSTRAINT `fk_flat_no` FOREIGN KEY (`flat_no`) REFERENCES `member_table`(`flat_no`) ON DELETE CASCADE ON UPDATE CASCADE,
---   CONSTRAINT `fk_society_reg` FOREIGN KEY (`society_reg`) REFERENCES `member_table`(`society_reg`) ON DELETE CASCADE ON UPDATE CASCADE
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
 -- Table structure for `messages`
 -- --------------------------------------------------------
 CREATE TABLE messages (

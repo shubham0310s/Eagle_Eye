@@ -76,12 +76,7 @@ if (mysqli_num_rows($result) == 0) {
           <span class="links_name">HOME</span>
         </a>
       </li>
-      <li>
-        <a href="m_bill.php">
-          <i class='bx bx-receipt'></i>
-          <span class="links_name">BILL</span>
-        </a>
-      </li>
+
       <li>
         <a href="m_event.php">
           <i class='bx bx-calendar'></i>
