@@ -78,13 +78,13 @@ if (isset($_POST['sent'])) {
       $flat_no = $society . "_" . $flat;
       $Q = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat_no}'");
       $rmail = mysqli_fetch_array($Q);
-      $message = "<h2><pre>YOU GOT A VISITOR!!
-
-             <b>Name :</b>" . $name . "
-             <b>Phone :</b>" . $phone . "
-             <b>Reasone :</b>" . $meet . "
-             
-             </pre></h2>";
+      $message = "<h2>
+                    <pre>YOU GOT A VISITOR!
+                       <b>Name :</b>" . $name . "
+                       <b>Phone :</b>" . $phone . "
+                       <b>Reason :</b>" . $meet . "
+                    </pre>
+                  </h2>";
 
 
       //mailer function start here do not touch without permission
@@ -99,15 +99,15 @@ if (isset($_POST['sent'])) {
       $mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
       $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
       $mail->SMTPAuth = true;                               // Enable SMTP authentication
-      $mail->Username = 'eagleeye.local@gmail.com';                 // SMTP username
-      $mail->Password = 'qvxwtozigesmgmww';                           // SMTP password
+      $mail->Username = 'eagleeye@gmail.com';                 // SMTP username
+      $mail->Password = 'rkzygqmlaqwfdqat';                           // SMTP password
       $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
       $mail->Port = 587;                                    // TCP port to connect to
 
       //Recipients
-      $mail->setFrom('eagleeye.local@gmail.com', 'Mailer');
+      $mail->setFrom('eagleeye@gmail.com', 'Mailer');
       $mail->addAddress($rmail["m_email"], 'Recipient');     // Add a recipient
-      $mail->addReplyTo('eagleeye.local@gmail.com', 'Information');
+      $mail->addReplyTo('eagleeye@gmail.com', 'Information');
 
       //Content
       $mail->isHTML(true);                                  // Set email format to HTML
@@ -128,10 +128,18 @@ if (isset($_POST['sent'])) {
   }
 
 } else {
-  $error_msg = 'Please fill out all required fields.';
+  // $error_msg = 'Please fill out all required fields.';
 }
-// }
+
+// check to see if the user successfully created an account
+if (isset($success) && $success == true) {
+  echo '<script>alert("sent Successful")</script>';
+}
+if (isset($error_msg)) {
+  echo "<p>" . $error_msg . "</p>";
+}
 ?>
+
 
 
 
@@ -282,27 +290,6 @@ if (isset($_POST['sent'])) {
           <label for="lname">Phone No.</label><br>
           <input type="text" id="phone" name="phone" placeholder="1234-567-890" maxlength="10" required>
 
-          <script>
-            $(document).ready(function () {
-              var alertShown = false; // Flag to track if the alert has been shown
-
-              $("#phone").on("blur", function () {
-                var phoneValue = $(this).val();
-
-                // Regular expression for phone number in the format 1234-567-890
-                var phonePattern = /^[0-9]{4}-[0-9]{3}-[0-9]{3}$/;
-
-                // Only trigger the alert if the pattern doesn't match and alert hasn't been shown already
-                if (!alertShown && !phoneValue.match(phonePattern)) {
-                  alert("Please enter a valid phone number in the format 1234-567-890.");
-                  alertShown = true; // Set the flag to true once the alert is shown
-                } else {
-                  alertShown = false; // Reset the flag when a valid phone number is entered
-                }
-              });
-            });
-          </script>
-
           <label for="country">Flat No.</label>
           <select id="country" name="flat">
             <option value="" disabled selected>Flat no </option>
@@ -324,16 +311,21 @@ if (isset($_POST['sent'])) {
           <input type="text" id="fname" name="meet" placeholder="Reason " required><br>
 
           <label for="fname">Photo</label>
-          <!-- Video preview -->
+          <br>
+
+          <!-- Video preview (for capturing images) -->
           <video id="video" autoplay style="width: 300px; height: 200px; border: 1px solid #ccc;"></video>
-          <br>
-          <!-- Canvas to display captured image -->
+
+          <!-- Canvas to store the captured image -->
           <canvas id="canvas" style="display: none;"></canvas>
+
           <br>
-          <!-- Buttons -->
+          <!-- Buttons for camera capture -->
           <button type="button" id="capture-btn">Capture Image</button>
-          <button type="button" id="upload-btn" style="display: none;">Upload Image</button>
-          <input type="hidden" id="captured_image" name="captured_image">
+
+          <br><br>
+          <input type="submit" name="sent" value="Submit">
+
 
           <script>
             const video = document.getElementById("video");
@@ -364,12 +356,8 @@ if (isset($_POST['sent'])) {
             });
           </script>
 
-          <input type="submit" name="sent" value="Submit">
-
         </form>
       </div>
-
-
     </div>
     </div>
     </div>
@@ -387,15 +375,6 @@ if (isset($_POST['sent'])) {
         sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
     }
   </script>
-  <?php
-  // check to see if the user successfully created an account
-  if (isset($success) && $success == true) {
-    echo '<script>alert("sent Successful")</script>';
-  }
-  if (isset($error_msg)) {
-    echo "<p>" . $error_msg . "</p>";
-  }
-  ?>
 
 </body>
 

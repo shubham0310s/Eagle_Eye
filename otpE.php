@@ -66,7 +66,7 @@ if (time() > $_SESSION['expire']) {
 				<i class="fas fa-user"></i>
 			</label>
 			<input type="number" style='letter-spacing: 16px; font-size: 20px;' name="otp" placeholder="0-0-0-0-0-0"
-				id="otp" required>
+				id="otp" maxlength="6" required>
 
 			<b>Didn't receive OTP </b>&nbsp;<a href="newotpE.php">Send Again</a>&nbsp;<br>
 

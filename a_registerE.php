@@ -59,15 +59,15 @@ if (isset($_POST['registerBtn'])) {
 					$mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
 					$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
 					$mail->SMTPAuth = true;                               // Enable SMTP authentication
-					$mail->Username = 'demonslayer1me2u@gmail.com';                 // SMTP username
-					$mail->Password = 'demonkongslayer@#';                           // SMTP password
+					$mail->Username = 'eayleeye@gmail.com';                 // SMTP username
+					$mail->Password = 'rkzygqmlaqwfdqat';                           // SMTP password
 					$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 					$mail->Port = 587;                                    // TCP port to connect to
 
 					//Recipients
-					$mail->setFrom('demonslaye1me2u@gmail.com', 'Mailer');
+					$mail->setFrom('eayleeye@gmail.com', 'Mailer');
 					$mail->addAddress($email, 'Recipient');     // Add a recipient
-					$mail->addReplyTo('demonslayer1me2u@gmail.com', 'Information');
+					$mail->addReplyTo('eayleeye@gmail.com', 'Information');
 
 					//Content
 					$mail->isHTML(true);                                  // Set email format to HTML

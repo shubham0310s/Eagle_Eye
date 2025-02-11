@@ -27,15 +27,16 @@ if (isset($_SESSION['random_number']) && isset($_SESSION['attempt']) && isset($_
         $mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = 'eagleeye.local@gmail.com';                 // SMTP username
-        $mail->Password = 'qvxwtozigesmgmww';                           // SMTP password
+        $mail->Username = 'eayleeye@gmail.com';                 // SMTP username
+        $mail->Password = 'rkzygqmlaqwfdqat';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
 
         //Recipients
-        $mail->setFrom('eagleeye.local@gmail.com', 'Mailer');
+        $mail->setFrom('eayleeye@gmail.com', 'Mailer');
         $mail->addAddress($email, 'Recipient');     // Add a recipient
-        $mail->addReplyTo('eagleeye.local@gmail.com', 'Information');
+        $mail->addReplyTo('eayleeye@gmail.com', 'Information');
+
 
         //Content
         $mail->isHTML(true);                                  // Set email format to HTML
