@@ -1,10 +1,13 @@
 <?php
 require("society_dbE.php");
 session_start();
+
+// Check session
 if (!isset($_SESSION['w_logged_in'])) {
   header("Location: index.html");
   exit;
 }
+
 if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION['w_society'])) {
   $wname = $_SESSION['w_name'];
   $wemail = $_SESSION['w_email'];
@@ -14,24 +17,22 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
   $wemail = "Email@gmail.com";
   $wsociety = "0000";
 }
-$society = "";
+
 date_default_timezone_set("Asia/Kolkata");
 
 $society = $_SESSION['w_society'];
 $result = mysqli_query($conn, "SELECT `flat_no` FROM `member_table` WHERE `society_reg`='{$society}'");
+
 $success = "";
 $error_msg = "";
 
 if (isset($_POST['sent'])) {
-
   $name = mysqli_real_escape_string($conn, $_POST['firstname']);
   $phone = mysqli_real_escape_string($conn, $_POST['phone']);
   $flat = mysqli_real_escape_string($conn, $_POST['flat']);
   $meet = mysqli_real_escape_string($conn, $_POST['meet']);
 
-
-  //storing all necessary data into the respective variables.
-  if (isset($_POST['captured_image']) && !empty($_POST['captured_image'])) {
+  if (!empty($_POST['captured_image'])) {
     $capturedImage = $_POST['captured_image'];
     $imageData = explode(',', $capturedImage);
 
@@ -40,9 +41,56 @@ if (isset($_POST['sent'])) {
       $imageName = uniqid("visitor_", true) . ".png";
       $imagePath = "visitor_image/" . $imageName;
 
-      // Save image to server
       if (file_put_contents($imagePath, base64_decode($imageBase64))) {
-        // Database insertion logic
+        // Insert visitor details into database
+        $date = date('Y-m-d H:i:s');
+        $insert_query = "INSERT INTO `visitor_table`(`v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) 
+                                 VALUES ('{$name}', '{$imageName}', '{$society}', '{$phone}', '{$date}', '{$meet}', '{$flat}', 'pending')";
+
+        if (mysqli_query($conn, $insert_query)) {
+          // Get recipient email
+          $flat_no = $society . "_" . $flat;
+          $query = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat_no}'");
+          $rmail = mysqli_fetch_assoc($query);
+
+          if ($rmail) {
+            $recipient_email = $rmail["m_email"];
+            $message = "<h2>YOU GOT A VISITOR!</h2>
+                                    <p><b>Name:</b> {$name}</p>
+                                    <p><b>Phone:</b> {$phone}</p>
+                                    <p><b>Reason:</b> {$meet}</p>";
+
+            // PHPMailer setup
+            require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\PHPMailer.php';
+            require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\SMTP.php';
+            require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\Exception.php';
+
+            $mail = new PHPMailer\PHPMailer\PHPMailer();
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'your_email@gmail.com'; // Use App Password
+            $mail->Password = 'your_app_password'; // Use App Password
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->setFrom('your_email@gmail.com', 'Eagle Eye');
+            $mail->addAddress($recipient_email);
+            $mail->isHTML(true);
+            $mail->Subject = 'Visitor Notification';
+            $mail->Body = $message;
+            $mail->AltBody = strip_tags($message);
+
+            if ($mail->send()) {
+              echo '<script>alert("Visitor Entry Successful and Email Sent!");</script>';
+            } else {
+              echo '<script>alert("Visitor Entry Successful but Email Failed: ' . $mail->ErrorInfo . '");</script>';
+            }
+          } else {
+            echo '<script>alert("No email found for this flat number.");</script>';
+          }
+        } else {
+          echo '<script>alert("Database insertion failed.");</script>';
+        }
       } else {
         $error_msg = "Error saving image.";
       }
@@ -52,95 +100,12 @@ if (isset($_POST['sent'])) {
   } else {
     $error_msg = "Captured image is missing.";
   }
-
-
-  if ($name != "" && $phone != "" && $flat != "" && $meet != "" && $capturedImage != "") {
-    // if (($file_type = "image/jpeg" || $file_type = "image/png") && $file_size <= 41943040) {
-    //"images" is just a folder name here we will load the file.
-    $date = date('Y-m-d H:i:s.u');
-
-    mysqli_query($conn, "INSERT INTO `visitor_table`(`visitor_id`, `v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) VALUES ('{}','{$name}','{$imageName}','{$society}','{$phone}','{$date}','{$meet}','{$flat}','pending')");
-    // move_uploaded_file($file_path, 'visitor_image/' . $imageName);
-    // verify the user's account was created
-
-    $query = mysqli_query($conn, "SELECT * FROM `visitor_table` WHERE `v_name`='{$name}' AND `phone_no`='{$phone}'");
-
-    if (mysqli_num_rows($query) == 1) {
-
-      $success = true;
-
-      $sql = "SELECT * FROM `visitor_table` WHERE `flat_no`='{$flat}' AND `status`='pending'";
-      $result = mysqli_query($conn, $sql);
-      if (isset($result)) {
-        $_SESSION[$flat] = mysqli_num_rows($result);
-      }
-
-      $flat_no = $society . "_" . $flat;
-      $Q = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat_no}'");
-      $rmail = mysqli_fetch_array($Q);
-      $message = "<h2>
-                    <pre>YOU GOT A VISITOR!
-                       <b>Name :</b>" . $name . "
-                       <b>Phone :</b>" . $phone . "
-                       <b>Reason :</b>" . $meet . "
-                    </pre>
-                  </h2>";
-
-
-      //mailer function start here do not touch without permission
-      require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\PHPMailer.php';
-      require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\SMTP.php';
-      require 'C:\xampp\htdocs\testmail\mail\PHPMailer-master\src\Exception.php';
-
-      $mail = new PHPMailer\PHPMailer\PHPMailer();
-      $mail->IsSMTP(); // enable SMTP
-
-      //Server settings
-      $mail->SMTPDebug = 0;                                 // Enable verbose debug output                               
-      $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
-      $mail->SMTPAuth = true;                               // Enable SMTP authentication
-      $mail->Username = 'eagleeye@gmail.com';                 // SMTP username
-      $mail->Password = 'rkzygqmlaqwfdqat';                           // SMTP password
-      $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-      $mail->Port = 587;                                    // TCP port to connect to
-
-      //Recipients
-      $mail->setFrom('eagleeye@gmail.com', 'Mailer');
-      $mail->addAddress($rmail["m_email"], 'Recipient');     // Add a recipient
-      $mail->addReplyTo('eagleeye@gmail.com', 'Information');
-
-      //Content
-      $mail->isHTML(true);                                  // Set email format to HTML
-      $mail->Subject = 'Eagle Eye';
-      $mail->Body = $message;
-      $mail->AltBody = 'YOU GOT A VISITOR';
-
-      //send the message and check for errors
-      if (!$mail->send()) {
-        echo " Email failed to sent ";
-      }
-      //Mailer function ends here 
-
-    }
-
-  } else {
-    $error_msg = 'Please choose valid file type';
-  }
-
-} else {
-  // $error_msg = 'Please fill out all required fields.';
 }
 
-// check to see if the user successfully created an account
-if (isset($success) && $success == true) {
-  echo '<script>alert("sent Successful")</script>';
-}
-if (isset($error_msg)) {
-  echo "<p>" . $error_msg . "</p>";
+if (isset($error_msg) && $error_msg != "") {
+  echo "<p>$error_msg</p>";
 }
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -155,12 +120,6 @@ if (isset($error_msg)) {
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    if (window.history.replaceState) {
-      window.history.replaceState(null, null, window.location.href);
-    }
-
-  </script>
 </head>
 
 <body>
@@ -286,7 +245,6 @@ if (isset($error_msg)) {
             });
           </script>
 
-
           <label for="lname">Phone No.</label><br>
           <input type="text" id="phone" name="phone" placeholder="1234-567-890" maxlength="10" required>
 
@@ -297,13 +255,11 @@ if (isset($error_msg)) {
             $find = $society . "_";
 
             if ($result) {
-
               while ($row = mysqli_fetch_array($result)) {
                 $flat = str_replace($find, "", $row["flat_no"]);
-                echo "<option value='$flat'>$flat<br></option>";
+                echo "<option value='$flat'>$flat</option>";
               }
             }
-
             ?>
           </select><br>
 
@@ -322,6 +278,13 @@ if (isset($error_msg)) {
           <br>
           <!-- Buttons for camera capture -->
           <button type="button" id="capture-btn">Capture Image</button>
+          <!-- <button type="button" id="upload-btn">Upload Image</button> -->
+
+          <!-- File input for manual image upload -->
+          <input type="file" id="file-input" accept="image/*" style="display: none;">
+
+          <!-- Hidden input to store the image data -->
+          <input type="hidden" id="captured_image" name="captured_image">
 
           <br><br>
           <input type="submit" name="sent" value="Submit">

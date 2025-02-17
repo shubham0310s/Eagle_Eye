@@ -137,7 +137,6 @@ if (isset($_POST['registerBtn'])) {
 		<h1>Welcome to Eagle Eye</h1>
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
-
 			<label for="name">
 				<i class="fas fa-user"></i>
 			</label>
@@ -153,8 +152,6 @@ if (isset($_POST['registerBtn'])) {
 					});
 				});
 			</script>
-
-
 
 			<label for="society no">
 				<i class='fas fa-building'></i>
@@ -213,11 +210,7 @@ if (isset($_POST['registerBtn'])) {
 			<input type="password" title="Please enter the same Password as above" name="conpassword"
 				placeholder="Confirm Password" minlength="8" id="conpassword" required
 				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange="
-  this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
-">
-
-
-
+				this.setCustomValidity(this.validity.patternMismatch ? this.title : ''); ">
 
 			<?php
 			// check to see if the user successfully created an account
