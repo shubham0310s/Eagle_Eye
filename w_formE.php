@@ -45,12 +45,12 @@ if (isset($_POST['sent'])) {
         // Insert visitor details into database
         $date = date('Y-m-d H:i:s');
         $insert_query = "INSERT INTO `visitor_table`(`v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) 
-                                 VALUES ('{$name}', '{$imageName}', '{$society}', '{$phone}', '{$date}', '{$meet}', '{$flat}', 'pending')";
+                          VALUES ('{$name}', '{$imageName}', '{$society}', '{$phone}', '{$date}', '{$meet}', '{$flat}', 'pending')";
 
         if (mysqli_query($conn, $insert_query)) {
           // Get recipient email
-          $flat_no = $society . "_" . $flat;
-          $query = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat_no}'");
+     
+          $query = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat}'");
           $rmail = mysqli_fetch_assoc($query);
 
           if ($rmail) {
@@ -69,11 +69,11 @@ if (isset($_POST['sent'])) {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_email@gmail.com'; // Use App Password
-            $mail->Password = 'your_app_password'; // Use App Password
+            $mail->Username = 'eayleeye@gmail.com'; // Use App Password
+            $mail->Password = 'rkzygqmlaqwfdqat'; // Use App Password
             $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
-            $mail->setFrom('your_email@gmail.com', 'Eagle Eye');
+            $mail->setFrom('eayleeye@gmail.com', 'Eagle Eye');
             $mail->addAddress($recipient_email);
             $mail->isHTML(true);
             $mail->Subject = 'Visitor Notification';
