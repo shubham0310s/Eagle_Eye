@@ -24,7 +24,7 @@ CREATE TABLE `admin_table` (
 
 -- Insert data into `admin_table`
 INSERT INTO `admin_table` (`ad_password`, `society_reg`, `a_email`, `a_name`) VALUES
-('0b5f5fec8f76afb4fc36f8e38ca3de2b', 1234, 'demonslayer1me2u@gmail.com', 'Shubham');
+('e182d667d176a59905fc00b70e26f52e', 1234, 'eagleeye@gmail.com', 'Eagle Eye');
 
 -- --------------------------------------------------------
 -- Table structure for `member_table`
@@ -47,8 +47,8 @@ CREATE TABLE `member_table` (
 
 -- Insert data into `member_table`
 INSERT INTO `member_table` (`m_password`, `m_name`, `society_reg`, `residence`, `phone_no`, `flat_no`, `m_email`) VALUES
-('efa74ac8ab520985afdb5d587c272df3', 'bhargvi', 1234, 'Owned', 9435627847, '2222_A101', 'cosmicmarrow77@gmail.com'),
-('efa74ac8ab520985afdb5d587c272df3', 'Bhavya', 1234, 'Owned', 9359038738, '2222_A102', 'socialgaurav02@gmail.com');
+('efa74ac8ab520985afdb5d587c272df3', 'Shubham', 1234, 'Owned', 9435627847, 'A101', 'demonslayer1me2u@gmail.com'),
+('efa74ac8ab520985afdb5d587c272df3', 'Iyer', 1234, 'Owned', 9359038738, 'A102', 'iyer23swayam@gmail.com');
 
 -- --------------------------------------------------------
 -- Table structure for `watchman_table`
@@ -68,7 +68,7 @@ CREATE TABLE `watchman_table` (
 
 -- Insert data into `watchman_table`
 INSERT INTO `watchman_table` (`w_password`, `society_reg`, `w_name`, `w_email`, `w_phno`) VALUES
-('dfaa192a5bf01f2e3966a69ac3bf2caa', 1234, 'watchmanA', 'watchmanA@gmail.com', 9874563210);
+('dfaa192a5bf01f2e3966a69ac3bf2caa', 1234, 'Shrey', 'watchman@gmail.com', 9874563210);
 
 -- --------------------------------------------------------
 -- Table structure for `visitor_table`
@@ -90,7 +90,7 @@ CREATE TABLE `visitor_table` (
 
 -- Insert data into `visitor_table`
 INSERT INTO `visitor_table` (`v_name`, `v_image`, `society_reg`, `phone_no`, `visiting_date`, `visiting_purpose`, `flat_no`, `status`) VALUES
-('Ajay', '12.jpg', 1234, 9987685647, '2023-01-23 11:59:14', 'Guest', '2222_A101', 'Approved');
+('Ajay', '12.jpg', 1234, 9987685647, '2023-01-23 11:59:14', 'Guest', 'A101', 'Approved');
 
 -- --------------------------------------------------------
 -- Table structure for `events`
@@ -109,7 +109,6 @@ CREATE TABLE `events` (
 INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `society_reg`)
 VALUES
 ('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 1234),
-('Annual General Meeting', '2025-01-15 17:00:00', '2025-01-15 19:00:00', 1234);
 
 -- --------------------------------------------------------
 -- Table structure for `messages`
