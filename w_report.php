@@ -80,6 +80,10 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
   </div>
   <section class="home-section">
     <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">MEMBER REPORT</span>
+      </div>
       <!-- This start of account info function -->
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">

@@ -222,8 +222,9 @@ $visitor = mysqli_num_rows($v);
           }
         </script>
         <!-- This end of account info function -->
-
     </nav>
+
+    <div class="container"></div>
     <div class="home-content">
       <div class="overview-boxes">
         <div class="box">

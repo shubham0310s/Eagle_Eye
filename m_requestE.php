@@ -171,11 +171,11 @@ if (mysqli_num_rows($result) == 0) {
         </script>
         <!-- This end of account info function -->
     </nav>
-    <div class="home-content">
 
+    <div class="container"></div>
+    <div class="home-content">
       <div class="sales-boxes">
         <div class="recent-sales box">
-          <!-- <div class="title">Visitor</div> -->
           <div class="sales-details">
             <ul class="details">
               <li class="topic">Image</li>

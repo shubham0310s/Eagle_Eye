@@ -140,11 +140,10 @@ $society = $_SESSION['a_society'];
                     toggleMenu.classList.toggle('active')
                 }
             </script>
-
             <!-- This end of account info function -->
-
         </nav>
 
+        <div class="container"></div>
         <div class="home-content">
             <div class="overview-boxes">
                 <div id="chat-container"

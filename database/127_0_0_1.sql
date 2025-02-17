@@ -24,7 +24,7 @@ CREATE TABLE `admin_table` (
 
 -- Insert data into `admin_table`
 INSERT INTO `admin_table` (`ad_password`, `society_reg`, `a_email`, `a_name`) VALUES
-('e182d667d176a59905fc00b70e26f52e', 1234, 'eagleeye@gmail.com', 'Eagle Eye');
+('e182d667d176a59905fc00b70e26f52e', 1234, 'eayleeye@gmail.com', 'Eagle Eye');
 
 -- --------------------------------------------------------
 -- Table structure for `member_table`
@@ -108,7 +108,7 @@ CREATE TABLE `events` (
 -- Insert data into `events`
 INSERT INTO `events` (`event_title`, `event_start`, `event_end`, `society_reg`)
 VALUES
-('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 1234),
+('Community Meeting', '2024-12-30 10:00:00', '2024-12-30 12:00:00', 1234);
 
 -- --------------------------------------------------------
 -- Table structure for `messages`

@@ -147,6 +147,8 @@ error_log("Session active for: $aname ($aemail) | Society: $society");
         </script>
         <!-- This end of account info function -->
     </nav>
+
+    <div class="container"></div>
     <div class="home-content">
       <div class="sales-boxes">
         <div class="recent-sales box">

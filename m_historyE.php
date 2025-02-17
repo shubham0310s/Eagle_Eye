@@ -147,6 +147,7 @@ if (isset($_SESSION['m_name']) && isset($_SESSION['m_email']) && isset($_SESSION
         <!-- This end of account info function -->
     </nav>
 
+    <div class="container"></div>
     <div class="home-content">
       <div class="sales-boxes">
         <div class="recent-sales box">

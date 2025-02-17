@@ -131,7 +131,7 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
         <!-- This end of account info function -->
     </nav>
 
-
+    <div class="container"></div>
     <div class="home-content">
       <div class="sales-boxes">
         <div class="recent-sales box">
@@ -142,7 +142,7 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
               if ($vresult) {
                 while ($row = mysqli_fetch_array($vresult)) {
 
-                  echo "<li><a href='visitor_image/" . $row['v_image'] . "'><img src='visitor_image/" . $row['v_image'] . "' height = '35px' width = '45px'></a></li>";
+                  echo "<li><a href='visitor_image/" . $row['v_image'] . "'><img src='visitor_image/" . $row['v_image'] . "' height = '35px' width = '35px'></a></li>";
                 }
                 mysqli_data_seek($vresult, 0);
                 ?>
@@ -192,7 +192,6 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
               <ul class="details">
                 <li class="topic">Date</li>
                 <?php
-
                 while ($row = mysqli_fetch_array($vresult)) {
 
                   echo "<li style='margin-top:30px; margin-bottom:30px'><a>" . $row['visiting_date'] . "</a></li>";
@@ -200,7 +199,6 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
                 mysqli_data_seek($vresult, 0);
 
                 ?>
-
 
               </ul>
               <ul class="details">
@@ -234,10 +232,7 @@ if (isset($_SESSION['w_name']) && isset($_SESSION['w_email']) && isset($_SESSION
               }
               ?>
           </div>
-
         </div>
-
-
       </div>
     </div>
   </section>
