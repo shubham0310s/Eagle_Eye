@@ -108,28 +108,8 @@ if (isset($_POST['registerBtn'])) {
 	<title>Register</title>
 	<link rel="shortcut icon" href="img/2.png" type="image/png">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<link href="css/registerE.css" rel="stylesheet" type="text/css">
-	<style>
-		/* Chrome, Safari, Edge, Opera */
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-
-		/* Firefox */
-		input[type=number] {
-			-moz-appearance: textfield;
-		}
-	</style>
-	<script>
-		if (window.history.replaceState) {
-			window.history.replaceState(null, null, window.location.href);
-		}
-
-
-	</script>
 </head>
 
 <body>
@@ -162,13 +142,15 @@ if (isset($_POST['registerBtn'])) {
 			<script>
 				$(document).ready(function () {
 					$("#society_reg").on("blur", function () {
-						// Regular expression to validate the society no. (4 digits starting from 1000 to 9999)
+						// Regular expression to validate a 4-digit number (1000-9999)
 						if (!$(this).val().match(/^[1-9][0-9]{3}$/)) {
-							alert("Please enter a valid Society No. (4 digits starting from 1000 to 9999).");
+							alert("Please enter a valid Society No. (4-digit number between 1000 and 9999).");
+							$(this).val(""); // Clear the invalid input
 						}
 					});
 				});
 			</script>
+
 			<label for="email">
 				<i class="fas fa-envelope"></i>
 			</label>
@@ -181,6 +163,7 @@ if (isset($_POST['registerBtn'])) {
 						// Regular expression to validate the email (gmail address)
 						if (!$(this).val().match(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)) {
 							alert("Please enter a valid gmail address.");
+							document.preventDefault();
 						}
 					});
 				});
