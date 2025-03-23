@@ -53,8 +53,6 @@ if (isset($_POST['registerBtn'])) {
 						$error_msg = 'The Email<b>' . $email . '</b> is already taken. Please use another.';
 				} else
 					$error_msg = 'The Flat <b>' . $flat . '</b> is already taken. Please use another.';
-				// } else
-				// $error_msg = 'The ID <b>' . $id . '</b> is already taken. Please use another.';
 			} else
 				$error_msg = 'Your password is not strong enough. Please use another.';
 		} else
@@ -73,22 +71,7 @@ if (isset($_POST['registerBtn'])) {
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 	<link href="css/registerE.css" rel="stylesheet" type="text/css">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<style>
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
 
-		input[type=number] {
-			-moz-appearance: textfield;
-		}
-	</style>
-	<script>
-		if (window.history.replaceState) {
-			window.history.replaceState(null, null, window.location.href);
-		}
-	</script>
 </head>
 
 <body>
@@ -137,7 +120,7 @@ if (isset($_POST['registerBtn'])) {
 			<label for="phone_no">
 				<i class="fas fa-user"></i>
 			</label>
-			<input type="number" name="phone_no" placeholder="Phone Number" id="phone_no" required>
+			<input type="number" name="phone_no" placeholder="Phone Number" id="phone_no" maxlength="10" required>
 
 			<label for="password">
 				<i class="fas fa-lock"></i>
@@ -181,11 +164,15 @@ if (isset($_POST['registerBtn'])) {
 					}
 
 					// Validation for Phone Number
-					const phoneNo = $('#phone_no').val();
-					if (!/^[0-9]{10}$/.test(phoneNo)) {
+
+					const phoneNo = $('#phone_no').val().trim(); // Trim spaces
+					console.log("Entered phone number:", phoneNo); // Debugging log
+
+					if (!/^\d{10}$/.test(phoneNo)) {
 						alert("Phone number must be exactly 10 digits.");
-						return false;
+						e.preventDefault(); // Stop form submission
 					}
+
 
 					// Validation for Password
 					const password = $('#password').val();
