@@ -72,22 +72,22 @@ if (isset($_POST["check"])) {
         $mail->SMTPDebug = 2;                                 // Enable verbose debug output                               
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = 'yourmailhere';                 // SMTP username
-        $mail->Password = 'password';                           // SMTP password
+        $mail->Username = 'eayleeye@gmail.com';                 // SMTP username
+        $mail->Password = 'rkzygqmlaqwfdqat';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                      // TCP port to connect to
         $mail->clearCustomHeaders();
 
         //Recipients
-        $mail->setFrom('yourmailhere', 'Mailer');
+        $mail->setFrom('eayleeye@gmail.com', 'Mailer');
         $mail->addAddress($email, 'Recipient');     // Add a recipient
-        $mail->addReplyTo('yourmailhere', 'Information');
+        $mail->addReplyTo('eayleeye@gmail.com', 'Information');
 
         //Content
         $mail->isHTML(true);                                  // Set email format to HTML
         $mail->Subject = 'Eagle Eye';
         $mail->Body = $message;
-        $mail->AltBody = 'You got a email for Updating';
+        $mail->AltBody = 'You got a email for updating';
 
         //send the message and check for errors
         if (!$mail->send()) {
