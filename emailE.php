@@ -72,22 +72,22 @@ if (isset($_POST["check"])) {
         $mail->SMTPDebug = 2;                                 // Enable verbose debug output                               
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = 'demonslayer1me2u@gmail.com';                 // SMTP username
-        $mail->Password = 'qvxwtozigesmgmww';                           // SMTP password
+        $mail->Username = 'yourmailhere';                 // SMTP username
+        $mail->Password = 'password';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                      // TCP port to connect to
         $mail->clearCustomHeaders();
 
         //Recipients
-        $mail->setFrom('demonslayer1me2u@gmail.com', 'Mailer');
+        $mail->setFrom('yourmailhere', 'Mailer');
         $mail->addAddress($email, 'Recipient');     // Add a recipient
-        $mail->addReplyTo('demonslayer1me2u@gmail.com', 'Information');
+        $mail->addReplyTo('yourmailhere', 'Information');
 
         //Content
         $mail->isHTML(true);                                  // Set email format to HTML
         $mail->Subject = 'Eagle Eye';
         $mail->Body = $message;
-        $mail->AltBody = 'You GOT A Visitor';
+        $mail->AltBody = 'You got a email for Updating';
 
         //send the message and check for errors
         if (!$mail->send()) {

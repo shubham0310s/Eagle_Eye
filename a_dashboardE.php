@@ -1,14 +1,5 @@
 <?php
-// Start the session with secure options
-session_start([
-  'cookie_lifetime' => 1800, // 30 minutes session
-  'cookie_secure' => true,   // Ensures the cookie is sent over HTTPS
-  'cookie_httponly' => true, // Prevents JavaScript access to session cookie
-  'cookie_samesite' => 'Strict' // Prevents cross-site request forgery
-]);
-
-// Include the database connection
-include("society_dbE.php");
+// Start the session with secure options N
 
 if (!isset($_SESSION['a_logged_in'])) {
   header("Location: index.html");

@@ -24,7 +24,7 @@ CREATE TABLE `admin_table` (
 
 -- Insert data into `admin_table`
 INSERT INTO `admin_table` (`ad_password`, `society_reg`, `a_email`, `a_name`) VALUES
-('e182d667d176a59905fc00b70e26f52e', 1234, 'eayleeye@gmail.com', 'Eagle Eye');
+('3b7aca79bf3af4087bce77832ec1a315', 1234, 'eayleeye@gmail.com', 'Eagle Eye');
 
 -- --------------------------------------------------------
 -- Table structure for `member_table`

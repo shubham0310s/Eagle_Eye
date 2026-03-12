@@ -49,7 +49,7 @@ if (isset($_POST['sent'])) {
 
         if (mysqli_query($conn, $insert_query)) {
           // Get recipient email
-     
+
           $query = mysqli_query($conn, "SELECT `m_email` FROM `member_table` WHERE `flat_no`='{$flat}'");
           $rmail = mysqli_fetch_assoc($query);
 
@@ -325,7 +325,6 @@ if (isset($error_msg) && $error_msg != "") {
     </div>
     </div>
   </section>
-
 
   <script>
     let sidebar = document.querySelector(".sidebar");
